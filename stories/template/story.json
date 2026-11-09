@@ -1,18 +1,19 @@
+
 {
   "scriptVersion": 1,
   "id": "ui-test-phone-v2",
   "title": "捡手机",
   "description": "仅用于界面测试，不含剧情",
-  "revision": 2,
+  "revision": 3,
   "phone": {
-  "owner": "机主",
-  "date": "2026-10-25",
-  "time": "09:41",
-  "battery": 94,
-  "network": "5G",
-  "passcode": "0101",
-  "wallpaper": "custom"
-},
+    "owner": "机主",
+    "date": "2026-10-25",
+    "time": "09:41",
+    "battery": 94,
+    "network": "5G",
+    "passcode": "0101",
+    "wallpaper": "custom"
+  },
   "installedApps": [
     "appstore",
     "phone",
@@ -43,32 +44,19 @@
     "find",
     "calculator",
     "settings",
-    "qq",
-    "weibo",
-    "redbook",
-    "bilibili",
-    "alipay",
-    "taobao",
-    "netease",
     "delivery",
     "forum",
     "whatsapp",
     "instagram",
-    "tiktok",
     "twitter",
-    "telegram",
-    "discord",
     "youtube",
-    "line",
     "snapchat",
     "facebook",
-    "messenger",
     "reddit",
     "spotify",
     "netflix",
     "pinterest",
-    "threads",
-    "kakao"
+    "threads"
   ],
   "contacts": [
     {
@@ -95,22 +83,6 @@
         }
       ]
     },
-      "messages": [
-        {
-          "id": "test-message-wechat",
-          "body": "这是一条测试消息。",
-          "senderId": "test-contact"
-        }
-      ]
-    },
-      "messages": [
-        {
-          "id": "test-message-qq",
-          "body": "这是一条测试消息。",
-          "senderId": "test-contact"
-        }
-      ]
-    },
     {
       "id": "test-chat-whatsapp",
       "app": "whatsapp",
@@ -125,8 +97,6 @@
           "body": "这是一条测试消息。",
           "senderId": "test-contact"
         }
-      ]
-    },
       ]
     }
   ],
@@ -321,26 +291,6 @@
         "meta": {}
       }
     ],
-    "weibo": [
-      {
-        "id": "test-item-weibo",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "redbook": [
-      {
-        "id": "test-item-redbook",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
     "delivery": [
       {
         "id": "test-item-delivery",
@@ -371,9 +321,9 @@
         "meta": {}
       }
     ],
-    "tiktok": [
+    "twitter": [
       {
-        "id": "test-item-tiktok",
+        "id": "test-item-twitter",
         "title": "测试内容",
         "body": "这是一条测试内容。",
         "sender": "测试用户",
@@ -381,9 +331,39 @@
         "meta": {}
       }
     ],
-    "twitter": [
+    "youtube": [
       {
-        "id": "test-item-twitter",
+        "id": "test-item-youtube",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      }
+    ],
+    "snapchat": [
+      {
+        "id": "test-item-snapchat",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      }
+    ],
+    "facebook": [
+      {
+        "id": "test-item-facebook",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      }
+    ],
+    "reddit": [
+      {
+        "id": "test-item-reddit",
         "title": "测试内容",
         "body": "这是一条测试内容。",
         "sender": "测试用户",
@@ -401,6 +381,92 @@
         "meta": {}
       }
     ],
+    "netflix": [
+      {
+        "id": "test-item-netflix",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      }
+    ],
+    "pinterest": [
+      {
+        "id": "test-item-pinterest",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      }
+    ],
+    "threads": [
+      {
+        "id": "test-item-threads",
+        "title": "测试内容",
+        "body": "这是一条测试内容。",
+        "sender": "测试用户",
+        "kind": "text",
+        "meta": {}
+      },
+      {
+        "id": "test-threads-message-1",
+        "title": "测试会话1",
+        "body": "这是一条测试消息。",
+        "sender": "测试联系人1",
+        "folder": "私信"
+      },
+      {
+        "id": "test-threads-activity-1",
+        "title": "测试动态1",
+        "body": "这是一条测试回复动态。",
+        "sender": "测试用户1",
+        "meta": {
+          "activityType": "reply"
+        }
+      },
+      {
+        "id": "test-threads-message-2",
+        "title": "测试会话2",
+        "body": "这是一条测试消息。",
+        "sender": "测试联系人2",
+        "folder": "私信"
+      },
+      {
+        "id": "test-threads-activity-2",
+        "title": "测试动态2",
+        "body": "这是一条测试回复动态。",
+        "sender": "测试用户2",
+        "meta": {
+          "activityType": "reply"
+        }
+      },
+      {
+        "id": "test-threads-message-3",
+        "title": "测试会话3",
+        "body": "这是一条测试消息。",
+        "sender": "测试联系人3",
+        "folder": "私信"
+      },
+      {
+        "id": "test-threads-activity-3",
+        "title": "测试动态3",
+        "body": "这是一条测试回复动态。",
+        "sender": "测试用户3",
+        "meta": {
+          "activityType": "reply"
+        }
+      }
+    ],
+    "appstore": [
+      {
+        "id": "test-appstore",
+        "title": "测试内容",
+        "body": "这是一条测试内容。"
+      }
+    ]
+  },
   "variables": {},
   "events": [],
   "tests": []
