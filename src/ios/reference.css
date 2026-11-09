@@ -741,3 +741,21 @@
   background: #fafafa;
   color: #ffadb7;
 }
+/* Custom lock screen wallpaper */
+.ios18 .wallpaper-custom {
+  background: linear-gradient(
+    155deg,
+    #d7ddbc 0%,
+    #a0b79b 33%,
+    #526f62 66%,
+    #b5c0aa 100%
+  );
+}
+
+.ios18 .wallpaper-custom.is-locked {
+  background: url("../lockscreen.jpg") center / cover no-repeat;
+}
+
+.ios18 .wallpaper-custom.is-locked .wallpaper-orb {
+  display: none;
+}
