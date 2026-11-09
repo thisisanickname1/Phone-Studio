@@ -5,13 +5,14 @@
   "description": "仅用于界面测试，不含剧情",
   "revision": 2,
   "phone": {
-    "owner": "机主",
-    "date": "2026-10-25",
-    "time": "09:41",
-    "battery": 94,
-    "network": "5G",
-    "wallpaper": "apple-wwdc26"
-  },
+  "owner": "机主",
+  "date": "2026-10-25",
+  "time": "09:41",
+  "battery": 94,
+  "network": "5G",
+  "passcode": "0101",
+  "wallpaper": "apple-wwdc26"
+},
   "installedApps": [
     "appstore",
     {
