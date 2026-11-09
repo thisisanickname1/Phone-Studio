@@ -763,3 +763,37 @@
 .ios18 .wallpaper-custom.is-locked .lock-clock-block {
   color: #111;
 }
+/* Custom light wallpaper: adjust lock screen and status bar */
+.ios18 .wallpaper-custom.is-locked .lock-clock-block {
+  top: 48px;
+  color: #111;
+}
+
+/* Dark status bar icons and text */
+.ios18 .wallpaper-custom.is-locked .status-bar {
+  color: #111;
+}
+
+/* Battery outline */
+.ios18 .wallpaper-custom.is-locked .status-bar .ios-battery {
+  border: 1px solid #111;
+  background: rgba(17, 17, 17, 0.08);
+}
+
+/* Battery terminal */
+.ios18 .wallpaper-custom.is-locked .status-bar .ios-battery::after {
+  background: #111;
+  opacity: 1;
+}
+
+/* Battery level */
+.ios18 .wallpaper-custom.is-locked .status-bar .ios-battery > span {
+  background: rgba(17, 17, 17, 0.12);
+  opacity: 1;
+}
+
+/* Battery percentage */
+.ios18 .wallpaper-custom.is-locked .status-bar .ios-battery > b {
+  color: #111;
+  mix-blend-mode: normal;
+}
