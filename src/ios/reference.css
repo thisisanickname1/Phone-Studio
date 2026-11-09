@@ -759,3 +759,7 @@
 .ios18 .wallpaper-custom.is-locked .wallpaper-orb {
   display: none;
 }
+/* Light lock screen: use black clock text */
+.ios18 .wallpaper-custom.is-locked .lock-clock-block {
+  color: #111;
+}
