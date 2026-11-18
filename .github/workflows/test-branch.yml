@@ -1,0 +1,50 @@
+
+name: Test Branch Validation
+
+on:
+  push:
+    branches:
+      - test/group-chat-nickname
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-branch-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Validate story
+        run: npm run story:validate
+
+      - name: Test story
+        run: npm run story:test
+
+      - name: Build project
+        run: npm run build
