@@ -6,7 +6,7 @@
   "revision": 6,
   "phone": {
     "owner": "机主",
-    "date": "2026-10-25",
+    "date": "2026-12-25",
     "time": "09:41",
     "battery": 94,
     "network": "5G",
@@ -60,14 +60,14 @@
       "id": "xavi",
       "name": "Xavi",
       "phone": "",
-      "avatar": "",
+      "avatar": "avatars/xavi.jpg",
       "bio": ""
     },
     {
       "id": "marc-bernal",
       "name": "Marc Bernal",
       "phone": "",
-      "avatar": "",
+      "avatar": "avatars/marc-bernal.jpg",
       "bio": ""
     }
   ],
