@@ -195,10 +195,22 @@ export function makeItem(partial: Partial<Item> = {}): Item {
 export function validateWork(input: unknown): Work {
   return workSchema.parse(input);
 }
+// 支持的 Base64 图片、音频和视频格式
+const DATA_MEDIA_PATTERN =
+  /^data:(image\/(png|jpeg|webp|gif)|audio\/(mpeg|mp3|wav|ogg|webm|mp4)|video\/(mp4|webm));base64,[a-zA-Z0-9+/=\s]+$/;
+
+// 支持 public/avatars/ 目录中的本地头像
+const LOCAL_AVATAR_PATTERN =
+  /^avatars\/[a-zA-Z0-9_-]+\.(?:png|jpe?g|webp|gif)$/i;
+
 export function safeMedia(value: string) {
-  return /^data:(image\/(png|jpeg|webp|gif)|audio\/(mpeg|mp3|wav|ogg|webm|mp4)|video\/(mp4|webm));base64,[a-zA-Z0-9+/=\s]+$/.test(
-    value,
-  )
-    ? value
-    : "";
+  if (DATA_MEDIA_PATTERN.test(value)) {
+    return value;
+  }
+
+  if (LOCAL_AVATAR_PATTERN.test(value)) {
+    return value;
+  }
+
+  return "";
 }
