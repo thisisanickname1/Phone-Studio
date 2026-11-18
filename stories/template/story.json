@@ -3,7 +3,7 @@
   "id": "ui-test-phone-v2",
   "title": "捡手机",
   "description": "仅用于界面测试，不含剧情",
-  "revision": 4,
+  "revision": 6,
   "phone": {
     "owner": "机主",
     "date": "2026-10-25",
@@ -55,6 +55,20 @@
       "name": "测试联系人",
       "phone": "",
       "bio": "这是一条测试内容。"
+    },
+    {
+      "id": "xavi",
+      "name": "Xavi",
+      "phone": "",
+      "avatar": "",
+      "bio": ""
+    },
+    {
+      "id": "marc-bernal",
+      "name": "Marc Bernal",
+      "phone": "",
+      "avatar": "",
+      "bio": ""
     }
   ],
   "chats": [
@@ -87,6 +101,214 @@
           "id": "test-message-whatsapp",
           "body": "这是一条测试消息。",
           "senderId": "test-contact"
+        }
+      ]
+    },
+    {
+      "id": "chat-whatsapp-xavi",
+      "app": "whatsapp",
+      "title": "Xavi",
+      "participants": [
+        "owner",
+        "xavi"
+      ],
+      "messages": [
+        {
+          "id": "xavi-001",
+          "body": "你好，我是哈姆扎",
+          "senderId": "owner",
+          "time": "2026-09-17 21:23"
+        },
+        {
+          "id": "xavi-002",
+          "body": "你好，哈姆扎",
+          "senderId": "xavi",
+          "time": "2026-09-17 21:35"
+        },
+        {
+          "id": "xavi-003",
+          "body": "今天麻烦你了",
+          "senderId": "owner",
+          "time": "2026-09-17 21:37"
+        },
+        {
+          "id": "xavi-004",
+          "body": "没有啊",
+          "senderId": "xavi",
+          "time": "2026-09-17 21:38"
+        },
+        {
+          "id": "xavi-005",
+          "body": "需要帮忙尽管说",
+          "senderId": "xavi",
+          "time": "2026-09-17 21:38"
+        },
+        {
+          "id": "xavi-006",
+          "body": "好。",
+          "senderId": "owner",
+          "time": "2026-09-17 21:39"
+        },
+        {
+          "id": "xavi-007",
+          "body": "今天语文有点难。",
+          "senderId": "owner",
+          "time": "2026-09-26 22:15"
+        },
+        {
+          "id": "xavi-008",
+          "body": "哪里啊？",
+          "senderId": "xavi",
+          "time": "2026-09-26 22:16"
+        },
+        {
+          "id": "xavi-009",
+          "body": "阅读和作文，唉，我总是写不对。",
+          "senderId": "owner",
+          "time": "2026-09-26 22:17"
+        },
+        {
+          "id": "xavi-010",
+          "body": "没事，慢慢来，明天晚自习后我们一起看看，今天就好好休息。",
+          "senderId": "xavi",
+          "time": "2026-09-26 22:17"
+        },
+        {
+          "id": "xavi-011",
+          "body": "Xavi，你真好。",
+          "senderId": "owner",
+          "time": "2026-09-26 22:20"
+        },
+        {
+          "id": "xavi-012",
+          "body": "晚安☺️",
+          "senderId": "xavi",
+          "time": "2026-09-26 22:22"
+        },
+        {
+          "id": "xavi-013",
+          "body": "今天晚上出去吃热干面。",
+          "senderId": "xavi",
+          "time": "2026-09-27 12:10"
+        },
+        {
+          "id": "xavi-014",
+          "body": "ok",
+          "senderId": "owner",
+          "time": "2026-09-27 12:12"
+        },
+        {
+          "id": "xavi-015",
+          "body": "库巴西和Marc Bernal今天去吃Paw里脊肉饼，不用等他们。",
+          "senderId": "xavi",
+          "time": "2026-09-27 12:15"
+        },
+        {
+          "id": "xavi-016",
+          "body": "Lamine呢？",
+          "senderId": "owner",
+          "time": "2026-09-27 12:17"
+        },
+        {
+          "id": "xavi-017",
+          "body": "他要回家吃饭",
+          "senderId": "xavi",
+          "time": "2026-09-27 12:19"
+        },
+        {
+          "id": "xavi-018",
+          "body": "好。",
+          "senderId": "owner",
+          "time": "2026-09-27 12:21"
+        }
+      ]
+    },
+    {
+      "id": "chat-whatsapp-marc-bernal",
+      "app": "whatsapp",
+      "title": "Marc Bernal",
+      "participants": [
+        "owner",
+        "marc-bernal"
+      ],
+      "messages": [
+        {
+          "id": "marc-001",
+          "body": "在吗？",
+          "senderId": "owner",
+          "time": "2026-09-24 22:32"
+        },
+        {
+          "id": "marc-002",
+          "body": "在，怎么了？",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:33"
+        },
+        {
+          "id": "marc-003",
+          "body": "我忘记抄数学作业了。",
+          "senderId": "owner",
+          "time": "2026-09-24 22:35"
+        },
+        {
+          "id": "marc-004",
+          "body": "数学有作业？",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:36"
+        },
+        {
+          "id": "marc-005",
+          "body": "？",
+          "senderId": "owner",
+          "time": "2026-09-24 22:37"
+        },
+        {
+          "id": "marc-006",
+          "body": "纳尼",
+          "senderId": "owner",
+          "time": "2026-09-24 22:37"
+        },
+        {
+          "id": "marc-007",
+          "body": "你不是课代表吗？😳",
+          "senderId": "owner",
+          "time": "2026-09-24 22:38"
+        },
+        {
+          "id": "marc-008",
+          "body": "对啊，我是课代表。",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:39"
+        },
+        {
+          "id": "marc-009",
+          "body": "但是这跟我不知道数学作业有啥关系？",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:41"
+        },
+        {
+          "id": "marc-010",
+          "body": "。可以。",
+          "senderId": "owner",
+          "time": "2026-09-24 22:43"
+        },
+        {
+          "id": "marc-011",
+          "body": "数学作业：\n\n1. 纠错卷(三)正面\n\n2. 必刷题23页—25页",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:45"
+        },
+        {
+          "id": "marc-012",
+          "body": "这么快？",
+          "senderId": "owner",
+          "time": "2026-09-24 22:46"
+        },
+        {
+          "id": "marc-013",
+          "body": "我刚去问我爸了。",
+          "senderId": "marc-bernal",
+          "time": "2026-09-24 22:47"
         }
       ]
     }
