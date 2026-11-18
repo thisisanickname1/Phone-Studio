@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 import {
   workSchema,
@@ -214,15 +215,25 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
     if (!registry.some((a) => a.id === chat.app && a.engine === "messaging"))
       fail(`chats.${n}.app`, "需要聊天 App");
 
-    chat.participants.forEach((c, j) => {
-      if (!contacts.has(c) && c !== "owner")
-        fail(`chats.${n}.participants.${j}`, "联系人不存在: " + c);
-    });
-
-    // 机主加至少两名联系人时，识别为群聊
+    // 机主加至少两名成员时，识别为群聊
     const isGroupChat = chat.participants.length > 2;
 
-    // 检查群昵称是否属于当前群聊成员
+    // 通讯录外的成员可以出现在 WhatsApp 群聊中，不强制设置群昵称
+    chat.participants.forEach((memberId, j) => {
+      if (memberId === "owner") return;
+
+      if (
+        !contacts.has(memberId) &&
+        !(chat.app === "whatsapp" && isGroupChat)
+      ) {
+        fail(
+          `chats.${n}.participants.${j}`,
+          "非通讯录成员只允许出现在 WhatsApp 群聊中",
+        );
+      }
+    });
+
+    // 群昵称是可选项，但设置后必须对应当前群成员且不能为空
     for (const [memberId, nickname] of Object.entries(chat.groupNames)) {
       if (!chat.participants.includes(memberId)) {
         fail(
@@ -249,7 +260,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
 
       const { senderId, ...item } = m;
 
-      // 只在当前群聊中读取群昵称
+      // 群昵称只覆盖当前群聊中的成员名称
       const groupNickname =
         isGroupChat && senderId
           ? chat.groupNames[senderId]?.trim() || ""
@@ -266,6 +277,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
               ? s.phone.owner
               : contacts.get(senderId || "")?.name ||
                 m.sender ||
+                senderId ||
                 s.phone.owner),
           avatar: m.avatar || contacts.get(senderId || "")?.avatar || "",
           outgoing: senderId === "owner" || m.outgoing,
