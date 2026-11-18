@@ -1,3 +1,4 @@
+
 import { NativeComposer } from "./DeviceSystem";
 import { useSkinState } from "./skinState";
 import { useState } from "react";
@@ -32,6 +33,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { safeMedia, type Item, type UiValue } from "./schema";
+
 export type SkinProps = {
   ui?: Record<string, UiValue>;
   onUi?: (key: string, value: UiValue) => void;
@@ -48,6 +50,7 @@ export type SkinProps = {
   thread: string;
   onThread: (s: string) => void;
 };
+
 function Avatar({
   name,
   round = false,
@@ -67,6 +70,7 @@ function Avatar({
     </span>
   );
 }
+
 function ItemMedia({ item }: { item: Item }) {
   const src = safeMedia(item.media);
   return src ? (
@@ -83,18 +87,21 @@ function ItemMedia({ item }: { item: Item }) {
     </div>
   );
 }
+
 function MessageList({
   items,
   creator,
   onItem,
   onRead,
   whatsapp = false,
+  groupChat = false,
 }: {
   items: Item[];
   creator: boolean;
   onItem: (i: Item) => void;
   onRead: (id: string) => void;
   whatsapp?: boolean;
+  groupChat?: boolean;
 }) {
   return (
     <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
@@ -111,6 +118,9 @@ function MessageList({
             className="skin-bubble"
             onClick={() => (creator ? onItem(i) : onRead(i.id))}
           >
+            {whatsapp && groupChat && !i.outgoing && (
+              <strong className="wa-group-sender">{i.sender}</strong>
+            )}
             {["image", "audio", "video"].includes(i.kind) ? (
               <ItemMedia item={i} />
             ) : i.kind === "transfer" ? (
@@ -132,6 +142,7 @@ function MessageList({
     </div>
   );
 }
+
 function Compose({
   creator,
   onAdd,
@@ -151,6 +162,7 @@ function Compose({
     </div>
   );
 }
+
 export function WeChatSkin(p: SkinProps) {
   const [tab, setTab] = useState("微信"),
     [query, setQuery] = useState(""),
@@ -158,11 +170,13 @@ export function WeChatSkin(p: SkinProps) {
     [menu, setMenu] = useState(false),
     [searchOpen, setSearchOpen] = useState(false),
     [utility, setUtility] = useState("");
+
   const [readThreads, setReadThreads] = useSkinState<string[]>(
     p,
     "readThreads",
     [],
   );
+
   const conversations = [
     ...new Set(
       p.items
@@ -170,12 +184,15 @@ export function WeChatSkin(p: SkinProps) {
         .map((i) => i.title),
     ),
   ];
+
   const contacts = [
     ...new Set(p.items.map((i) => i.sender).filter((s) => s !== "我")),
   ];
+
   const posts = p.items.filter(
     (i) => i.folder === "朋友圈" || i.kind === "post",
   );
+
   return (
     <div
       className="wechat-ui independent-skin"
@@ -221,6 +238,7 @@ export function WeChatSkin(p: SkinProps) {
           {p.thread ? <MoreHorizontal size={22} /> : <CirclePlus size={22} />}
         </button>
       </div>
+
       {menu && (
         <div className="wx-popup-menu" role="menu">
           {["搜索", "发起群聊", "添加朋友", "扫一扫", "收付款"].map((label) => (
@@ -239,6 +257,7 @@ export function WeChatSkin(p: SkinProps) {
           ))}
         </div>
       )}
+
       {utility ? (
         <div className="skin-scroll wx-utility">
           {utility === "聊天信息" && (
@@ -260,6 +279,7 @@ export function WeChatSkin(p: SkinProps) {
               ))}
             </div>
           )}
+
           {p.items
             .filter((i) => i.folder === utility)
             .map((i) => (
@@ -272,6 +292,7 @@ export function WeChatSkin(p: SkinProps) {
                 <span>›</span>
               </button>
             ))}
+
           {!p.items.some((i) => i.folder === utility) &&
             utility !== "聊天信息" && <p className="skin-empty">暂无内容</p>}
         </div>
@@ -328,6 +349,7 @@ export function WeChatSkin(p: SkinProps) {
                   />
                 </label>
               )}
+
               {conversations
                 .filter(
                   (t) =>
@@ -339,6 +361,7 @@ export function WeChatSkin(p: SkinProps) {
                 .map((t) => {
                   const list = p.items.filter((i) => i.title === t),
                     last = list.at(-1)!;
+
                   return (
                     <button
                       className="wx-chat-row"
@@ -366,6 +389,7 @@ export function WeChatSkin(p: SkinProps) {
                     </button>
                   );
                 })}
+
               {!conversations.length && <p className="skin-empty">暂无聊天</p>}
             </>
           ) : tab === "通讯录" ? (
@@ -481,6 +505,7 @@ export function WeChatSkin(p: SkinProps) {
           )}
         </div>
       )}
+
       {!p.thread && !moments && !utility && (
         <nav className="wx-bottom">
           {[
@@ -503,10 +528,12 @@ export function WeChatSkin(p: SkinProps) {
     </div>
   );
 }
+
 export function WhatsAppSkin(p: SkinProps) {
   const [tab, setTab] = useState("聊天"),
     [query, setQuery] = useState(""),
     [filter, setFilter] = useState("全部");
+
   const tabs = [
     { label: "动态", icon: Compass },
     { label: "通话", icon: Phone },
@@ -514,6 +541,7 @@ export function WhatsAppSkin(p: SkinProps) {
     { label: "聊天", icon: MessageCircle },
     { label: "设置", icon: Settings },
   ];
+
   const conversations = [
     ...new Set(
       p.items
@@ -522,7 +550,11 @@ export function WhatsAppSkin(p: SkinProps) {
         .map((i) => i.title),
     ),
   ];
+
   const name = tab === "聊天" ? p.name : tab;
+  const activeMessages = p.items.filter((i) => i.title === p.thread);
+  const isGroupChat = activeMessages.some((i) => i.folder === "群组");
+
   return (
     <div className="whatsapp-ui independent-skin">
       <div className="app-nav wa-nav">
@@ -547,6 +579,7 @@ export function WhatsAppSkin(p: SkinProps) {
           {p.creator ? <Plus size={21} /> : <Search size={20} />}
         </button>
       </div>
+
       {p.thread ? (
         <>
           <div className="wa-thread-profile">
@@ -555,28 +588,32 @@ export function WhatsAppSkin(p: SkinProps) {
             </button>
             <Avatar
               name={p.thread}
-              src={p.items.find((i) => i.title === p.thread)?.avatar}
+              src={activeMessages[0]?.avatar}
               round
             />
             <div>
               <strong>{p.thread}</strong>
-              <small>联系人</small>
+              <small>{isGroupChat ? "群组" : "联系人"}</small>
             </div>
             <Video size={18} />
             <Phone size={17} />
           </div>
+
           <MessageList
-            items={p.items.filter((i) => i.title === p.thread)}
+            items={activeMessages}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}
             whatsapp
+            groupChat={isGroupChat}
           />
+
           <Compose creator={p.creator} onAdd={p.onAdd} wa />
         </>
       ) : (
         <div className="skin-scroll">
           <h1 className="wa-large-title">{tab}</h1>
+
           {tab === "聊天" ? (
             <>
               <label className="wa-search">
@@ -588,6 +625,7 @@ export function WhatsAppSkin(p: SkinProps) {
                   onChange={(e) => setQuery(e.target.value)}
                 />
               </label>
+
               <div className="wa-filters">
                 {["全部", "未读", "群组"].map((f) => (
                   <button
@@ -599,6 +637,7 @@ export function WhatsAppSkin(p: SkinProps) {
                   </button>
                 ))}
               </div>
+
               {conversations
                 .filter((t) => t.includes(query))
                 .filter(
@@ -608,6 +647,7 @@ export function WhatsAppSkin(p: SkinProps) {
                 )
                 .map((t) => {
                   const last = p.items.filter((i) => i.title === t).at(-1)!;
+
                   return (
                     <button
                       className="wa-chat-row"
@@ -662,6 +702,7 @@ export function WhatsAppSkin(p: SkinProps) {
                   )}
                 </div>
               )}
+
               {p.items
                 .filter(
                   (i) =>
@@ -687,11 +728,13 @@ export function WhatsAppSkin(p: SkinProps) {
                     </span>
                   </button>
                 ))}
+
               {!p.items.some((i) => i.folder === tab) && (
                 <p className="skin-empty">暂无{tab}内容</p>
               )}
             </>
           )}
+
           {p.creator && (
             <button className="phone-add" onClick={p.onAdd}>
               添加{tab === "聊天" ? "聊天" : tab}内容
@@ -699,6 +742,7 @@ export function WhatsAppSkin(p: SkinProps) {
           )}
         </div>
       )}
+
       {!p.thread && (
         <nav className="wa-bottom">
           {tabs.map((t) => (
@@ -716,6 +760,7 @@ export function WhatsAppSkin(p: SkinProps) {
     </div>
   );
 }
+
 export function InstagramSkin(p: SkinProps) {
   const [tab, setTab] = useState("首页"),
     [dm, setDm] = useState(false),
@@ -723,6 +768,7 @@ export function InstagramSkin(p: SkinProps) {
     [likes, setLikes] = useSkinState<string[]>(p, "likes", []),
     [saved, setSaved] = useSkinState<string[]>(p, "saved", []),
     [showSaved, setShowSaved] = useState(false);
+
   const posts = p.items.filter(
       (i) =>
         i.kind === "post" ||
@@ -731,15 +777,18 @@ export function InstagramSkin(p: SkinProps) {
     stories = p.items.filter((i) => i.folder === "Story"),
     reels = p.items.filter((i) => i.kind === "video" || i.folder === "Reels"),
     messages = p.items.filter((i) => i.folder === "私信");
+
   const tabs = [
     { label: "首页", icon: Home },
     { label: "搜索", icon: Search },
     { label: "Reels", icon: Play },
     { label: "个人主页", icon: User },
   ];
+
   const shown = (
     showSaved ? posts.filter((i) => saved.includes(i.id)) : posts
   ).filter((i) => (i.title + i.body + i.sender).includes(query));
+
   return (
     <div className="instagram-ui independent-skin">
       <div className="app-nav ig-nav">
@@ -761,6 +810,7 @@ export function InstagramSkin(p: SkinProps) {
           </button>
         </div>
       </div>
+
       <div className="skin-scroll ig-scroll">
         {dm ? (
           <>
@@ -803,6 +853,7 @@ export function InstagramSkin(p: SkinProps) {
                 </span>
                 <small>你的快拍</small>
               </button>
+
               {stories.map((i) => (
                 <button
                   key={i.id}
@@ -816,6 +867,7 @@ export function InstagramSkin(p: SkinProps) {
                 </button>
               ))}
             </div>
+
             {posts.map((i) => (
               <article className="ig-post" key={i.id}>
                 <div className="ig-post-author">
@@ -828,9 +880,11 @@ export function InstagramSkin(p: SkinProps) {
                     <MoreHorizontal size={19} />
                   </button>
                 </div>
+
                 <button className="ig-post-media" onClick={() => p.onItem(i)}>
                   <ItemMedia item={i} />
                 </button>
+
                 <div className="ig-post-controls">
                   <button
                     aria-label={`喜欢${i.title}`}
@@ -876,6 +930,7 @@ export function InstagramSkin(p: SkinProps) {
                     />
                   </button>
                 </div>
+
                 <div className="ig-post-caption">
                   <strong>
                     {i.likes + (likes.includes(i.id) ? 1 : 0)} 次赞
@@ -939,7 +994,9 @@ export function InstagramSkin(p: SkinProps) {
                 <small>正在关注</small>
               </div>
             </div>
+
             <h3 className="ig-profile-name">{posts[0]?.sender ?? "我"}</h3>
+
             <div className="ig-profile-tabs">
               <button aria-label="帖子网格" onClick={() => setShowSaved(false)}>
                 <Grid size={21} />
@@ -961,6 +1018,7 @@ export function InstagramSkin(p: SkinProps) {
                 <AtSign size={21} />
               </button>
             </div>
+
             <div className="ig-explore">
               {shown.map((i) => (
                 <button key={i.id} onClick={() => p.onItem(i)}>
@@ -971,6 +1029,7 @@ export function InstagramSkin(p: SkinProps) {
           </>
         )}
       </div>
+
       <nav className="ig-bottom">
         {tabs.map((t) => (
           <button
