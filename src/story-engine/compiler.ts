@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 import {
   workSchema,
@@ -228,7 +227,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
       ) {
         fail(
           `chats.${n}.participants.${j}`,
-          "非通讯录成员只允许出现在 WhatsApp 群聊中",
+          "联系人不存在：非通讯录成员只允许出现在 WhatsApp 群聊中",
         );
       }
     });
