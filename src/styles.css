@@ -4918,3 +4918,16 @@ label {
   background: #e34f58;
   transform: rotate(135deg);
 }
+
+.wa-group-sender {
+  display: block;
+  margin-bottom: 3px;
+  color: #168c53;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.dark-phone .wa-group-sender {
+  color: #89d6a2;
+}
