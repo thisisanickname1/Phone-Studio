@@ -9,11 +9,14 @@ import {
 } from "../schema";
 import { registry } from "../registry";
 import { validateGraph } from "../engine";
+
 const id = z.string().regex(/^[a-zA-Z][a-zA-Z0-9_.-]*$/, "需要稳定的英文 ID");
+
 const content = itemSchema
   .partial()
   .extend({ id, title: z.string().default(""), body: z.string().default("") })
   .strict();
+
 const event = nodeSchema
   .partial()
   .extend({
@@ -22,6 +25,7 @@ const event = nodeSchema
     type: nodeSchema.shape.type.default("event"),
   })
   .strict();
+
 export const storySchema = z
   .object({
     scriptVersion: z.literal(1),
@@ -68,6 +72,7 @@ export const storySchema = z
           app: z.string().default("messages"),
           title: z.string(),
           participants: z.array(z.string()),
+          groupNames: z.record(z.string(), z.string()).default({}),
           messages: z.array(
             content.extend({ senderId: z.string().optional() }),
           ),
@@ -97,7 +102,9 @@ export const storySchema = z
       .default([]),
   })
   .strict();
+
 export type Story = z.infer<typeof storySchema>;
+
 export class StoryIssue extends Error {
   constructor(
     public field: string,
@@ -106,64 +113,87 @@ export class StoryIssue extends Error {
     super(message);
   }
 }
+
 export function compileStory(raw: unknown): { story: Story; work: Work } {
   const s = storySchema.parse(raw);
+
   const fail = (p: string, m: string): never => {
     throw new StoryIssue(p, m);
   };
+
   const names = new Set<string>();
+
   const unique = (v: string, p: string) => {
     if (names.has(v)) fail(p, "重复 ID: " + v);
     names.add(v);
   };
+
   const contacts = new Map(s.contacts.map((c) => [c.id, c]));
+
   s.contacts.forEach((c, i) => unique(c.id, `contacts.${i}.id`));
+
   const configuredIds = s.installedApps.map((a) =>
     typeof a === "string" ? a : a.id,
   );
+
   const installed = new Set(
     s.installedApps
       .filter((a) => typeof a === "string" || a.installed)
       .map((a) => (typeof a === "string" ? a : a.id)),
   );
+
   if (new Set(configuredIds).size !== s.installedApps.length)
     fail("installedApps", "App 重复");
+
   s.installedApps.forEach((a, i) => {
     if (!registry.some((r) => r.id === (typeof a === "string" ? a : a.id)))
       fail(`installedApps.${i}`, "未注册的 App");
   });
+
   const data: Work["data"] = {};
+
   const add = (
     app: string,
     raw: Partial<z.infer<typeof itemSchema>>,
     p: string,
   ) => {
     if (!installed.has(app)) fail(p, `App ${app} 未安装`);
+
     unique(raw.id!, p + ".id");
+
     const item = itemSchema.parse({
       time: s.phone.date + " " + (s.phone.time || "21:41"),
       sender: s.phone.owner,
       ...raw,
     });
+
     for (const k of ["media", "avatar"] as const)
       if (item[k] && !safeMedia(item[k]))
         fail(p + "." + k, "仅允许受支持的内嵌媒体，不允许脚本或远程资源");
+
     if (item.richText) {
       let doc;
+
       try {
         doc = JSON.parse(item.richText);
       } catch {
         fail(p + ".richText", "必须是结构化富文本 JSON，不能导入 HTML");
       }
-      if (!doc || typeof doc !== "object") fail(p + ".richText", "无效富文本");
+
+      if (!doc || typeof doc !== "object")
+        fail(p + ".richText", "无效富文本");
     }
+
     (data[app] ??= []).push(item);
   };
+
   for (const [app, items] of Object.entries(s.content))
     items.forEach((i, n) => add(app, i, `content.${app}.${n}`));
+
   s.contacts.forEach((c, n) => {
     if (c.avatar && !safeMedia(c.avatar))
       fail(`contacts.${n}.avatar`, "无效头像");
+
     if (installed.has("contacts"))
       add(
         "contacts",
@@ -177,14 +207,38 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
         `contacts.${n}`,
       );
   });
+
   s.chats.forEach((chat, n) => {
     unique(chat.id, `chats.${n}.id`);
+
     if (!registry.some((a) => a.id === chat.app && a.engine === "messaging"))
       fail(`chats.${n}.app`, "需要聊天 App");
+
     chat.participants.forEach((c, j) => {
       if (!contacts.has(c) && c !== "owner")
         fail(`chats.${n}.participants.${j}`, "联系人不存在: " + c);
     });
+
+    // 机主加至少两名联系人时，识别为群聊
+    const isGroupChat = chat.participants.length > 2;
+
+    // 检查群昵称是否属于当前群聊成员
+    for (const [memberId, nickname] of Object.entries(chat.groupNames)) {
+      if (!chat.participants.includes(memberId)) {
+        fail(
+          `chats.${n}.groupNames.${memberId}`,
+          "群昵称对应的成员不在群聊中",
+        );
+      }
+
+      if (!nickname.trim()) {
+        fail(
+          `chats.${n}.groupNames.${memberId}`,
+          "群昵称不能为空",
+        );
+      }
+    }
+
     chat.messages.forEach((m, j) => {
       if (
         m.senderId &&
@@ -192,30 +246,45 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
         !chat.participants.includes(m.senderId)
       )
         fail(`chats.${n}.messages.${j}.senderId`, "发信人不在会话中");
+
       const { senderId, ...item } = m;
+
+      // 只在当前群聊中读取群昵称
+      const groupNickname =
+        isGroupChat && senderId
+          ? chat.groupNames[senderId]?.trim() || ""
+          : "";
+
       add(
         chat.app,
         {
           ...item,
           title: chat.title,
           sender:
-            senderId === "owner"
+            groupNickname ||
+            (senderId === "owner"
               ? s.phone.owner
-              : contacts.get(senderId || "")?.name || m.sender || s.phone.owner,
+              : contacts.get(senderId || "")?.name ||
+                m.sender ||
+                s.phone.owner),
           avatar: m.avatar || contacts.get(senderId || "")?.avatar || "",
           outgoing: senderId === "owner" || m.outgoing,
+          folder: isGroupChat ? "群组" : item.folder,
           meta: {
             ...m.meta,
             conversationId: chat.id,
             participants: chat.participants.join(","),
+            isGroup: isGroupChat ? "true" : "false",
           },
         },
         `chats.${n}.messages.${j}`,
       );
     });
   });
+
   const nodes = s.events.map((e, n) => {
     unique(e.id, `events.${n}.id`);
+
     return nodeSchema.parse({
       event: "",
       target: "",
@@ -229,39 +298,53 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
       ...e,
     });
   });
+
   const itemIds = new Set(
       Object.values(data)
         .flat()
         .map((i) => i.id),
     ),
     nodeIds = new Set(nodes.map((n) => n.id));
+
   nodes.forEach((n, i) => {
     n.next.forEach((x, j) => {
-      if (!nodeIds.has(x)) fail(`events.${i}.next.${j}`, "不存在的节点: " + x);
+      if (!nodeIds.has(x))
+        fail(`events.${i}.next.${j}`, "不存在的节点: " + x);
     });
+
     if (n.event === "read" && n.target && !itemIds.has(n.target))
       fail(`events.${i}.target`, "不存在的内容");
+
     if (n.event === "openApp" && n.target && !installed.has(n.target))
       fail(`events.${i}.target`, "事件 App 未安装");
+
     n.actions.forEach((a, j) => {
       if (["unlock", "hide"].includes(a.type) && !itemIds.has(a.key))
         fail(`events.${i}.actions.${j}.key`, "不存在的内容");
+
       if (a.type === "message" && !installed.has(a.key))
         fail(`events.${i}.actions.${j}.key`, "消息 App 未安装");
+
       if (a.type === "choice" && !nodeIds.has(a.key))
         fail(`events.${i}.actions.${j}.key`, "选项节点不存在");
     });
+
     n.conditions.forEach((c, j) => {
       const [scope, ...rest] = c.key.split(":");
       const key = rest.join(":");
+
       if (["read", "unlocked"].includes(scope) && !itemIds.has(key))
         fail(`events.${i}.conditions.${j}.key`, "条件内容不存在");
+
       if (scope === "visited" && !installed.has(key))
         fail(`events.${i}.conditions.${j}.key`, "条件 App 未安装");
     });
   });
+
   const errors = validateGraph(nodes);
+
   if (errors.length) fail("events", errors.join("; "));
+
   const work = validateWork({
     formatVersion: 1,
     id: s.id,
@@ -285,6 +368,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
         const ids = s.installedApps.map((x) =>
           typeof x === "string" ? x : x.id,
         );
+
         return (
           (ids.includes(a.id) ? ids.indexOf(a.id) : 999) -
           (ids.includes(b.id) ? ids.indexOf(b.id) : 999)
@@ -294,6 +378,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
         const custom = s.installedApps.find(
           (a) => typeof a !== "string" && a.id === r.id,
         );
+
         return {
           id: r.id,
           name: r.name,
@@ -310,5 +395,6 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
     variables: s.variables,
     mode: nodes.length ? "mixed" : "explore",
   });
+
   return { story: s, work };
 }
