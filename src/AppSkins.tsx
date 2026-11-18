@@ -559,6 +559,12 @@ export function WhatsAppSkin(p: SkinProps) {
   const activeMessages = p.items.filter((i) => i.title === p.thread);
   const isGroupChat = activeMessages.some((i) => i.folder === "群组");
 
+  const threadAvatarMessage =
+    activeMessages.find((i) => !i.outgoing && i.avatar) ||
+    activeMessages.find((i) => i.avatar);
+
+  const threadAvatar = isGroupChat ? "" : threadAvatarMessage?.avatar || "";
+
   return (
     <div className="whatsapp-ui independent-skin">
       <div className="app-nav wa-nav">
@@ -592,7 +598,7 @@ export function WhatsAppSkin(p: SkinProps) {
             </button>
             <Avatar
               name={p.thread}
-              src={activeMessages[0]?.avatar}
+              src={threadAvatar}
               round
             />
             <div>
@@ -650,7 +656,20 @@ export function WhatsAppSkin(p: SkinProps) {
                     p.items.some((i) => i.title === t && i.folder === "群组"),
                 )
                 .map((t) => {
-                  const last = p.items.filter((i) => i.title === t).at(-1)!;
+                  const threadMessages = p.items.filter((i) => i.title === t);
+                  const last = threadMessages.at(-1)!;
+
+                  const isGroupThread = threadMessages.some(
+                    (i) => i.folder === "群组",
+                  );
+
+                  const avatarMessage =
+                    threadMessages.find((i) => !i.outgoing && i.avatar) ||
+                    threadMessages.find((i) => i.avatar);
+
+                  const avatar = isGroupThread
+                    ? ""
+                    : avatarMessage?.avatar || "";
 
                   return (
                     <button
@@ -661,11 +680,11 @@ export function WhatsAppSkin(p: SkinProps) {
                         p.onRead(t);
                       }}
                     >
-                      <Avatar name={t} src={last.avatar} round />
+                      <Avatar name={t} src={avatar} round />
                       <div>
                         <strong>{t}</strong>
                         <p>
-                          {last.outgoing && <CheckCheck size={12} />}{" "}
+                          {last.outgoing && <CheckCheck size={12} />}{ " " }
                           {last.body}
                         </p>
                       </div>
