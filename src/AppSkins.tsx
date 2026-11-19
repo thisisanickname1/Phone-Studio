@@ -570,9 +570,7 @@ export function WhatsAppSkin(p: SkinProps) {
     [filter, setFilter] = useState("全部");
 
   const tabs = [
-    { label: "动态", icon: Compass },
     { label: "通话", icon: Phone },
-    { label: "社区", icon: Users },
     { label: "聊天", icon: MessageCircle },
     { label: "设置", icon: Settings },
   ];

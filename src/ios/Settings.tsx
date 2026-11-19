@@ -275,7 +275,7 @@ export function NativeSettings({
         {items
           .filter(
             (i) =>
-              !nav.page || i.folder === nav.page || i.title.includes(nav.page),
+              !!nav.page && (i.folder === nav.page || i.title.includes(nav.page)),
           )
           .map((i) => (
             <button className="record-row" key={i.id} onClick={() => onItem(i)}>
