@@ -1,6 +1,6 @@
 import { NativeComposer } from "./DeviceSystem";
 import { useSkinState } from "./skinState";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   ChevronLeft,
   Plus,
@@ -107,6 +107,61 @@ function MessageList({
   whatsapp?: boolean;
   groupChat?: boolean;
 }) {
+  return (
+    <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
+      {items.map((i, index) => {
+        const date = i.time.slice(0, 10);
+        const previousDate =
+          index > 0 ? items[index - 1].time.slice(0, 10) : "";
+
+        return (
+          <Fragment key={i.id}>
+            {date !== previousDate && (
+              <div className="skin-date">{date}</div>
+            )}
+
+            <div
+              className={`skin-message ${i.outgoing ? "outgoing" : ""}`}
+            >
+              {!whatsapp && !i.outgoing && (
+                <Avatar name={i.sender} src={i.avatar} />
+              )}
+
+              <button
+                className="skin-bubble"
+                onClick={() => (creator ? onItem(i) : onRead(i.id))}
+              >
+                {whatsapp && groupChat && !i.outgoing && (
+                  <strong className="wa-group-sender">{i.sender}</strong>
+                )}
+
+                {["image", "audio", "video"].includes(i.kind) ? (
+                  <ItemMedia item={i} />
+                ) : i.kind === "transfer" ? (
+                  <div className="skin-transfer">
+                    ¥ {i.body}
+                    <small>转账记录 · 虚构</small>
+                  </div>
+                ) : (
+                  i.body
+                )}
+
+                <small className={whatsapp ? undefined : "wx-message-time"}>
+                  {i.time.slice(-5)}{" "}
+                  {whatsapp && i.outgoing && <CheckCheck size={11} />}
+                </small>
+              </button>
+
+              {!whatsapp && i.outgoing && (
+                <Avatar name={i.sender} src={i.avatar} />
+              )}
+            </div>
+          </Fragment>
+        );
+      })}
+    </div>
+  );
+}
   return (
     <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
       <div className="skin-date">{items[0]?.time.slice(0, 10)}</div>
