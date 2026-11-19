@@ -162,45 +162,6 @@ function MessageList({
     </div>
   );
 }
-  return (
-    <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
-      <div className="skin-date">{items[0]?.time.slice(0, 10)}</div>
-      {items.map((i) => (
-        <div
-          key={i.id}
-          className={`skin-message ${i.outgoing ? "outgoing" : ""}`}
-        >
-          {!whatsapp && !i.outgoing && (
-            <Avatar name={i.sender} src={i.avatar} />
-          )}
-          <button
-            className="skin-bubble"
-            onClick={() => (creator ? onItem(i) : onRead(i.id))}
-          >
-            {whatsapp && groupChat && !i.outgoing && (
-              <strong className="wa-group-sender">{i.sender}</strong>
-            )}
-            {["image", "audio", "video"].includes(i.kind) ? (
-              <ItemMedia item={i} />
-            ) : i.kind === "transfer" ? (
-              <div className="skin-transfer">
-                ¥ {i.body}
-                <small>转账记录 · 虚构</small>
-              </div>
-            ) : (
-              i.body
-            )}
-            <small className={whatsapp ? undefined : "wx-message-time"}>
-              {i.time.slice(-5)}{" "}
-              {whatsapp && i.outgoing && <CheckCheck size={11} />}
-            </small>
-          </button>
-          {!whatsapp && i.outgoing && <Avatar name={i.sender} src={i.avatar} />}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function Compose({
   creator,
