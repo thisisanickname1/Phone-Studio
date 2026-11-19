@@ -220,7 +220,7 @@
         },
         {
           "id": "xavi-015",
-          "body": "库巴西和Marc Bernal今天去吃Paw里脊肉饼，不用等他们。",
+          "body": "Pau Cubarsí和Marc Bernal今天去吃里脊肉饼，不用等他们。",
           "senderId": "xavi",
           "time": "2026-09-27 12:15"
         },
@@ -336,7 +336,7 @@
     {
       "id": "whatsapp-group-potato-snacks",
       "app": "whatsapp",
-      "title": "被吃了(高一二班非官方offical群聊)(21)",
+      "title": "群名被吃了",
       "participants": [
         "owner",
         "xiaojiahao-da-boshi",
@@ -347,7 +347,7 @@
         "pedri",
         "shark-arrives",
         "lamine-yamal",
-        "charlie-puth",
+        "marc-bernal",
         "burger-lover",
         "eric-rabbit",
         "balde"
@@ -355,7 +355,8 @@
       "groupNames": {
         "pablo-gavi": "小野猪",
         "pedri": "加那利群岛香蕉",
-        "lamine-yamal": "Ly19"
+        "lamine-yamal": "Ly19",
+        "marc-bernal": "加泰自研Charlie Puth"
       },
       "messages": [
         {
@@ -438,7 +439,7 @@
         {
           "id": "potato-group-012",
           "sender": "加泰自研Charlie Puth",
-          "senderId": "charlie-puth",
+          "senderId": "marc-bernal",
           "body": "谁知道英语作业是啥？急急急！",
           "time": "2026-09-24 12:23"
         },
