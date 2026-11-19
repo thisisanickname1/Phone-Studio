@@ -3,7 +3,7 @@
   "id": "ui-test-phone-v2",
   "title": "捡手机",
   "description": "仅用于界面测试，不含剧情",
-  "revision": 6,
+  "revision": 7,
   "phone": {
     "owner": "机主",
     "date": "2026-12-25",
@@ -68,6 +68,27 @@
       "name": "Marc Bernal",
       "phone": "",
       "avatar": "avatars/marc-bernal.jpg",
+      "bio": ""
+    },
+    {
+      "id": "pablo-gavi",
+      "name": "Pablo Gavi",
+      "phone": "",
+      "avatar": "avatars/pablo-gavi.jpg",
+      "bio": ""
+    },
+    {
+      "id": "pedri",
+      "name": "Pedri",
+      "phone": "",
+      "avatar": "avatars/pedri.jpg",
+      "bio": ""
+    },
+    {
+      "id": "lamine-yamal",
+      "name": "Lamine Yamal",
+      "phone": "",
+      "avatar": "avatars/lamine-yamal.jpg",
       "bio": ""
     }
   ],
@@ -309,6 +330,138 @@
           "body": "我刚去问我爸了。",
           "senderId": "marc-bernal",
           "time": "2026-09-24 22:47"
+        }
+      ]
+    },
+    {
+      "id": "whatsapp-group-potato-snacks",
+      "app": "whatsapp",
+      "title": "被吃了(高一二班非官方offical群聊)(21)",
+      "participants": [
+        "owner",
+        "xiaojiahao-da-boshi",
+        "pablo-gavi",
+        "french-fashion-role",
+        "hu-la-tang",
+        "juan-zi",
+        "pedri",
+        "shark-arrives",
+        "lamine-yamal",
+        "charlie-puth",
+        "burger-lover",
+        "eric-rabbit",
+        "balde"
+      ],
+      "groupNames": {
+        "pablo-gavi": "小野猪",
+        "pedri": "加那利群岛香蕉",
+        "lamine-yamal": "Ly19"
+      },
+      "messages": [
+        {
+          "id": "potato-group-001",
+          "sender": "小嘉豪大博士",
+          "senderId": "xiaojiahao-da-boshi",
+          "body": "你们这群天杀的！",
+          "time": "2026-09-24 09:47"
+        },
+        {
+          "id": "potato-group-002",
+          "sender": "小嘉豪大博士",
+          "senderId": "xiaojiahao-da-boshi",
+          "body": "还我薯片！😡",
+          "time": "2026-09-24 09:47"
+        },
+        {
+          "id": "potato-group-003",
+          "sender": "小野猪",
+          "senderId": "pablo-gavi",
+          "body": "你偷带手机？",
+          "time": "2026-09-24 09:53"
+        },
+        {
+          "id": "potato-group-004",
+          "sender": "小野猪",
+          "senderId": "pablo-gavi",
+          "body": "我要告老师。",
+          "time": "2026-09-24 09:53"
+        },
+        {
+          "id": "potato-group-005",
+          "sender": "来自法国的时尚担当",
+          "senderId": "french-fashion-role",
+          "body": "我告你们俩偷带手机。",
+          "time": "2026-09-24 09:54"
+        },
+        {
+          "id": "potato-group-006",
+          "sender": "喝辣的就喝胡辣汤",
+          "senderId": "hu-la-tang",
+          "body": "薯片回家。",
+          "time": "2026-09-24 12:16"
+        },
+        {
+          "id": "potato-group-007",
+          "sender": "娟子",
+          "senderId": "juan-zi",
+          "body": "薯片回家，我一口都没吃到！",
+          "time": "2026-09-24 12:17"
+        },
+        {
+          "id": "potato-group-008",
+          "sender": "加那利群岛香蕉",
+          "senderId": "pedri",
+          "body": "我都说了让你多带点",
+          "time": "2026-09-24 12:18"
+        },
+        {
+          "id": "potato-group-009",
+          "sender": "鲨鱼驾到！",
+          "senderId": "shark-arrives",
+          "body": "就是就是，没事Pedri你想吃我给你买。",
+          "time": "2026-09-24 12:19"
+        },
+        {
+          "id": "potato-group-010",
+          "sender": "小嘉豪大博士",
+          "senderId": "xiaojiahao-da-boshi",
+          "body": "你他妈怎么在我们班群？",
+          "time": "2026-09-24 12:20"
+        },
+        {
+          "id": "potato-group-011",
+          "sender": "Ly19",
+          "senderId": "lamine-yamal",
+          "body": "这期是家属位，",
+          "time": "2026-09-24 12:21"
+        },
+        {
+          "id": "potato-group-012",
+          "sender": "加泰自研Charlie Puth",
+          "senderId": "charlie-puth",
+          "body": "谁知道英语作业是啥？急急急！",
+          "time": "2026-09-24 12:23"
+        },
+        {
+          "id": "potato-group-013",
+          "sender": "我爱吃汉堡",
+          "senderId": "burger-lover",
+          "body": "太阳打西边出来了？",
+          "time": "2026-09-24 12:25"
+        },
+        {
+          "id": "potato-group-014",
+          "sender": "🐰Eric",
+          "senderId": "eric-rabbit",
+          "body": "今天下午老师要检查了。",
+          "time": "2026-09-24 12:30"
+        },
+        {
+          "id": "potato-group-015",
+          "sender": "巴巴尔德德",
+          "senderId": "balde",
+          "body": "纳尼？根本没人通知我！",
+          "time": "2026-09-24 12:33"
         }
       ]
     }

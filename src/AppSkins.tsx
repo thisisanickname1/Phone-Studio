@@ -60,14 +60,17 @@ function Avatar({
   src?: string;
 }) {
   const avatarSrc = safeMedia(src);
+  const isLocalAvatar = avatarSrc.startsWith("avatars/");
   const isImage =
-    avatarSrc.startsWith("data:image/") ||
-    avatarSrc.startsWith("avatars/");
+    avatarSrc.startsWith("data:image/") || isLocalAvatar;
+  const imageSrc = isLocalAvatar
+    ? import.meta.env.BASE_URL + avatarSrc
+    : avatarSrc;
 
   return (
     <span className={`skin-avatar ${round ? "round" : ""}`}>
       {isImage ? (
-        <img src={avatarSrc} alt="" />
+        <img src={imageSrc} alt="" />
       ) : (
         name.slice(0, 1)
       )}
@@ -125,6 +128,18 @@ function MessageList({
             >
               {!whatsapp && !i.outgoing && (
                 <Avatar name={i.sender} src={i.avatar} />
+              )}
+
+              {whatsapp && groupChat && !i.outgoing && (
+                i.avatar ? (
+                  <Avatar name={i.sender} src={i.avatar} round />
+                ) : (
+                  <span
+                    className="skin-avatar round"
+                    aria-hidden="true"
+                    style={{ visibility: "hidden" }}
+                  />
+                )
               )}
 
               <button
