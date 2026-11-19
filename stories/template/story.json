@@ -51,12 +51,6 @@
   ],
   "contacts": [
     {
-      "id": "test-contact",
-      "name": "测试联系人",
-      "phone": "",
-      "bio": "这是一条测试内容。"
-    },
-    {
       "id": "xavi",
       "name": "Xavi",
       "phone": "",
@@ -93,38 +87,6 @@
     }
   ],
   "chats": [
-    {
-      "id": "test-chat-messages",
-      "app": "messages",
-      "title": "测试会话",
-      "participants": [
-        "owner",
-        "test-contact"
-      ],
-      "messages": [
-        {
-          "id": "test-message-messages",
-          "body": "这是一条测试消息。",
-          "senderId": "test-contact"
-        }
-      ]
-    },
-    {
-      "id": "test-chat-whatsapp",
-      "app": "whatsapp",
-      "title": "测试会话",
-      "participants": [
-        "owner",
-        "test-contact"
-      ],
-      "messages": [
-        {
-          "id": "test-message-whatsapp",
-          "body": "这是一条测试消息。",
-          "senderId": "test-contact"
-        }
-      ]
-    },
     {
       "id": "chat-whatsapp-xavi",
       "app": "whatsapp",
@@ -465,6 +427,68 @@
           "time": "2026-09-24 12:33"
         }
       ]
+    },
+    {
+      "id": "whatsapp-group-class-1-2",
+      "app": "whatsapp",
+      "title": "高一二班班级群(43)",
+      "participants": [
+        "owner",
+        "class-teacher-rodrigo",
+        "anoeta-two-kids-mom"
+      ],
+      "groupNames": {},
+      "messages": [
+        {
+          "id": "class-001",
+          "sender": "班主任罗德里老师",
+          "senderId": "class-teacher-rodrigo",
+          "body": "各位家长好！欢迎大家加入高一二班这个大家庭！[握手][握手]\n\n孩子的成长是我们共同的目标，为了让老师、家长、学生沟通联系更加紧密畅通，请大家自觉遵守以下班级群公约：\n\n①入群后请修改自己的群昵称，命名形式：学生姓名+爸爸/妈妈+电话。\n\n②认真阅读群里每一条通知，没有特殊要求不用回复，避免刷屏使其他家长错过重要通知。\n\n③【青年大学习】接龙打卡等任务信息，请家长看到后及时完成。\n\n④群里不闲聊，如有特殊情况，孩子的个别私人问题，请单独联系老师。\n\n⑤紧急事件电话联系老师，非紧急事件，微信文字告知老师。由于教学任务繁忙，看到消息后会回复，未及时回复敬请谅解。[玫瑰][玫瑰]\n\n⑥禁止发布和孩子教育无关的链接、消息及不当言论。\n\n⑦禁止发红包或转账。\n\n建议您将本群置顶（点击右上角，选择置顶聊天），以免错过重要通知。以上公约希望大家共同遵守，感谢您的理解支持和配合！",
+          "time": "2026-08-31 16:32"
+        },
+        {
+          "id": "class-002",
+          "sender": "班主任罗德里老师",
+          "senderId": "class-teacher-rodrigo",
+          "body": "各位家长好：提醒孩子们起实行冬季作息时间，早7：10，午1：45，晚6：40进班。中午12：00，下午6：00，晚自习9：30放学。请各位家长注意时间安排，提醒学生不要迟到。@所有人",
+          "time": "2026-09-20 19:20"
+        },
+        {
+          "id": "class-003",
+          "sender": "班主任罗德里老师",
+          "senderId": "class-teacher-rodrigo",
+          "body": "今日通报，Marc Bernal没有交数学和英语作业。Adeyemi同学上课和Balde说话。Lamine Yamal同学没有带历史作业。",
+          "time": "2026-09-22 10:33"
+        },
+        {
+          "id": "class-004",
+          "sender": "阿诺埃塔两娃妈",
+          "senderId": "anoeta-two-kids-mom",
+          "body": "收到，老师，我回去一定好好说说Marc。",
+          "time": "2026-09-22 10:34"
+        },
+        {
+          "id": "class-005",
+          "sender": "班主任罗德里(数学)",
+          "senderId": "class-teacher-rodrigo",
+          "body": "Lamine Yamal和Pablo Gavi上自习课说话。",
+          "time": "2026-09-25 16:30"
+        },
+        {
+          "id": "class-006",
+          "sender": "班主任罗德里(数学)",
+          "senderId": "class-teacher-rodrigo",
+          "body": "Fermin 和 Pablo Gavi打闹，Pau Cubarsí和Marc Bernal上课偷吃面包。",
+          "time": "2026-09-25 19:21"
+        },
+        {
+          "id": "class-007",
+          "sender": "班主任罗德里(数学)",
+          "senderId": "class-teacher-rodrigo",
+          "body": "Gerard同学上课睡觉，Koundé同学不穿校服，Gordon同学上课看课外书。",
+          "time": "2026-09-26 21:10"
+        }
+      ]
     }
   ],
   "content": {
@@ -580,11 +604,21 @@
     ],
     "music": [
       {
-        "id": "test-item-music",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
+        "id": "music-song-ezuoju",
+        "title": "恶作剧",
+        "body": "",
+        "sender": "王蓝茵",
+        "kind": "audio",
+        "folder": "我的音乐",
+        "meta": {}
+      },
+      {
+        "id": "music-song-congcongnian",
+        "title": "匆匆那年",
+        "body": "",
+        "sender": "王菲",
+        "kind": "audio",
+        "folder": "我的音乐",
         "meta": {}
       }
     ],
