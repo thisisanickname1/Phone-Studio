@@ -501,16 +501,6 @@
         "meta": {}
       }
     ],
-    "contacts": [
-      {
-        "id": "test-item-contacts",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
     "photos": [
       {
         "id": "test-item-photos",
@@ -605,7 +595,7 @@
       {
         "id": "music-song-ezuoju",
         "title": "恶作剧",
-        "body": "",
+        "body": "我找不到很好的原因\n去阻挡这一切的情意\n这感觉太奇异\n我抱歉不能说明\n我相信这爱情的定义\n奇迹会发生也不一定\n风温柔的清晰\n也许飘来好消息",
         "sender": "王蓝茵",
         "kind": "audio",
         "folder": "我的音乐",
@@ -614,7 +604,7 @@
       {
         "id": "music-song-congcongnian",
         "title": "匆匆那年",
-        "body": "",
+        "body": "匆匆那年我们究竟说了几遍再见\n之后再拖延\n可惜谁有没有爱过不是一场七情\n上面的雄辩\n匆匆那年我们一时匆忙撂下难以\n承受的诺言\n只有等别人兑现\n不怪那吻痕还没积累成茧\n拥抱着冬眠也没能羽化再成仙",
         "sender": "王菲",
         "kind": "audio",
         "folder": "我的音乐",

@@ -172,7 +172,7 @@ export function ContactsSkin(p: Props) {
                   key={i.id}
                   item={i}
                   onItem={p.onItem}
-                  leading={<Avatar name={i.title} />}
+                  leading={<Avatar name={i.title} src={i.avatar} />}
                 />
               ))}
           </section>
@@ -775,11 +775,10 @@ export function MusicSkin(p: Props) {
             <Music size={20} />
             {song.title}
           </button>
-          {song.kind === "audio" && safeMedia(song.media) ? (
-            <AudioPlayer p={p} item={song} />
-          ) : (
-            <button onClick={() => p.onItem(song)}>查看歌曲内容</button>
+          {song.kind === "audio" && safeMedia(song.media) && (
+            <AudioPlayer key={song.id} p={p} item={song} />
           )}
+          <button onClick={() => p.onItem(song)}>查看歌曲内容</button>
           <button
             aria-label="下一首"
             onClick={() =>

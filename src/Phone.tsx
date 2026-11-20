@@ -920,6 +920,7 @@ function AppContent({
       : app.id === "whatsapp"
         ? WhatsAppSkin
         : (catalogSkins[app.id as keyof typeof catalogSkins] ?? null);
+  const songDetail = app.id === "music" && detail?.kind === "audio";
   const detailView = detail ? (
     <div className="phone-content detail-content">
       {detail.password && !creator && !unlocks.includes(detail.id) ? (
@@ -951,10 +952,14 @@ function AppContent({
             {detail.time} · {detail.sender}
           </small>
           <h2>{detail.title}</h2>
-          {(detail.media || ["media", "social"].includes(app.engine)) && (
-            <Media item={detail} />
-          )}
-          <RichText value={detail.richText} fallback={detail.body} />
+          {!songDetail &&
+            (detail.media || ["media", "social"].includes(app.engine)) && (
+              <Media item={detail} />
+            )}
+          <RichText
+            value={detail.richText}
+            fallback={detail.body || (songDetail ? "暂无歌词" : "")}
+          />
           <dl className="item-metadata">
             {getFields(app.id)
               .filter((f) => detail.meta?.[f.key])

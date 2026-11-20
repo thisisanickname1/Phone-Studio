@@ -314,8 +314,9 @@
   display: flex;
   width: 100%;
   gap: 12px;
-  padding: 16px;
+  padding: 16px 14px;
   align-items: center;
+  justify-content: flex-start;
   text-align: left;
   border-bottom: 1px solid #eee;
 }
@@ -332,6 +333,9 @@
 .native-contacts .catalog-row {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.native-contacts .catalog-row > .catalog-avatar {
+  flex: none;
 }
 .photo-mosaic {
   display: grid;
