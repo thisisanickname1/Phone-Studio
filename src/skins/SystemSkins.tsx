@@ -27,10 +27,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { download } from "../io";
-import { safeMedia, type Item } from "../schema";
+import { itemSchema, safeMedia, type Item } from "../schema";
 import {
   Add,
   Avatar,
+  ContactAvatar,
   Empty,
   groupItems,
   Header,
@@ -141,7 +142,10 @@ export function PhoneSkin(p: Props) {
   );
 }
 export function ContactsSkin(p: Props) {
-  const { q, setQ, items } = useContent(p, "所有联系人");
+  const { q, setQ, items: results } = useContent(p, "所有联系人");
+  const ownerCard = p.items.find((item) => item.id === "owner-card");
+  const ownerName = ownerCard?.title || p.owner || "我的名片";
+  const items = results.filter((item) => item !== ownerCard);
   return (
     <div className="catalog-skin native-contacts">
       <Header p={p} />
@@ -151,13 +155,26 @@ export function ContactsSkin(p: Props) {
         <button
           className="contact-self"
           onClick={() => {
-            if (items[0]) p.onItem(items[0]);
-            else if (p.creator) p.onAdd();
+            if (ownerCard) {
+              p.onItem(ownerCard);
+            } else if (p.creator) {
+              p.onAdd();
+            } else {
+              p.onItem(
+                itemSchema.parse({
+                  id: "owner-card",
+                  title: ownerName,
+                  body: "",
+                  sender: ownerName,
+                  time: "",
+                }),
+              );
+            }
           }}
         >
-          <Avatar name={p.owner ?? "我"} />
+          <ContactAvatar name={ownerName} />
           <span>
-            <strong>{p.owner ?? "我的名片"}</strong>
+            <strong>{ownerName}</strong>
             <small>我的名片</small>
           </span>
         </button>
@@ -172,7 +189,7 @@ export function ContactsSkin(p: Props) {
                   key={i.id}
                   item={i}
                   onItem={p.onItem}
-                  leading={<Avatar name={i.title} src={i.avatar} />}
+                  leading={<ContactAvatar name={i.title} />}
                 />
               ))}
           </section>

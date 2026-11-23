@@ -31,56 +31,65 @@
     "safari",
     "notes",
     "calendar",
-    "mail",
     "clock",
     "reminders",
     "files",
     "music",
     "maps",
     "weather",
+    "settings",
+    "forum",
+    "whatsapp",
+    "instagram"
+  ],
+  "excludedApps": [
+    "twitter",
     "wallet",
     "health",
     "find",
     "calculator",
-    "settings",
-    "forum",
-    "whatsapp",
-    "instagram",
-    "twitter"
+    "mail"
   ],
   "contacts": [
     {
+      "id": "owner",
+      "name": "Hamza Abdelkarim",
+      "phone": "+34 790 010 001",
+      "avatar": "",
+      "bio": ""
+    },
+    {
       "id": "xavi",
       "name": "Xavi",
-      "phone": "",
+      "phone": "+34 790 010 002",
       "avatar": "avatars/xavi.jpg",
       "bio": ""
     },
     {
       "id": "marc-bernal",
       "name": "Marc Bernal",
-      "phone": "",
+      "phone": "+34 790 010 003",
       "avatar": "avatars/marc-bernal.jpg",
       "bio": ""
     },
     {
       "id": "pablo-gavi",
       "name": "Pablo Gavi",
-      "phone": "",
+      "phone": "+34 790 010 004",
       "avatar": "avatars/pablo-gavi.jpg",
       "bio": ""
     },
     {
       "id": "pedri",
       "name": "Pedri",
-      "phone": "",
+      "phone": "+34 790 010 005",
       "avatar": "avatars/pedri.jpg",
       "bio": ""
     },
     {
       "id": "lamine-yamal",
       "name": "Lamine Yamal",
-      "phone": "",
+      "phone": "+34 790 010 006",
       "avatar": "avatars/lamine-yamal.jpg",
       "bio": ""
     }
@@ -551,16 +560,6 @@
         "meta": {}
       }
     ],
-    "mail": [
-      {
-        "id": "test-item-mail",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
     "clock": [
       {
         "id": "test-item-clock",
@@ -631,46 +630,6 @@
         "meta": {}
       }
     ],
-    "wallet": [
-      {
-        "id": "test-item-wallet",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "health": [
-      {
-        "id": "test-item-health",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "find": [
-      {
-        "id": "test-item-find",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "calculator": [
-      {
-        "id": "test-item-calculator",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
     "settings": [
       {
         "id": "test-item-settings",
@@ -694,16 +653,6 @@
     "instagram": [
       {
         "id": "test-item-instagram",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "twitter": [
-      {
-        "id": "test-item-twitter",
         "title": "测试内容",
         "body": "这是一条测试内容。",
         "sender": "测试用户",

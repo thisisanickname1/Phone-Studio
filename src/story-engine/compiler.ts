@@ -54,6 +54,7 @@ export const storySchema = z
         "safari",
         "settings",
       ]),
+    excludedApps: z.array(id).optional(),
     contacts: z
       .array(
         z.object({
@@ -150,6 +151,14 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
       fail(`installedApps.${i}`, "未注册的 App");
   });
 
+  const excluded = new Set(s.excludedApps);
+  s.excludedApps?.forEach((app, i) => {
+    if (!registry.some((entry) => entry.id === app))
+      fail(`excludedApps.${i}`, "未注册的 App");
+    if (app === "appstore" || configuredIds.includes(app))
+      fail(`excludedApps.${i}`, "不能排除 App Store 或已配置的 App");
+  });
+
   const data: Work["data"] = {};
 
   const add = (
@@ -199,7 +208,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
         "contacts",
         {
           id: c.id + "-card",
-          title: c.name,
+          title: c.id === "owner" ? s.phone.owner : c.name,
           body: c.bio,
           meta: { phone: c.phone },
           avatar: c.avatar,
@@ -374,7 +383,8 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
       notifications: true,
       ...s.phone,
     },
-    apps: [...registry]
+    apps: registry
+      .filter((app) => !excluded.has(app.id))
       .sort((a, b) => {
         const ids = s.installedApps.map((x) =>
           typeof x === "string" ? x : x.id,

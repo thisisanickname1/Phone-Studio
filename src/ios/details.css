@@ -109,7 +109,7 @@
   text-align: center;
   padding: 12px 0;
 }
-.ios18 .native-contact-hero > span {
+.ios18 .native-contact-hero > span:not(.contact-initials) {
   margin: auto;
   display: grid;
   place-items: center;
@@ -119,6 +119,12 @@
   background: #a4a9b1;
   color: #fff;
   font-size: 44px;
+}
+.native-contact-hero .contact-initials {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  font-size: 40px;
 }
 .ios18 .native-contact-hero h1 {
   font-size: 30px;

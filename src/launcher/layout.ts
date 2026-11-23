@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { useState, useEffect, useMemo } from "react";
 import { workSchema, type Work } from "../schema";
+import { registry } from "../registry";
 export const widgetSchema = z.object({
   id: z
     .string()
@@ -76,7 +77,14 @@ export function validateLayout(raw: unknown, input: Work) {
   const layout = layoutSchema.parse(raw);
   if (layout.workId !== w.id) throw Error("布局属于其他作品");
   const known = new Set(w.apps.map((a) => a.id));
-  if (layout.apps.some((a) => !known.has(a.id))) throw Error("布局含未注册App");
+  const removedAppIds = new Set(
+    registry.filter((app) => !known.has(app.id)).map((app) => app.id),
+  );
+  if (layout.apps.some((a) => !known.has(a.id) && !removedAppIds.has(a.id)))
+    throw Error("布局含未注册App");
+  layout.apps = layout.apps.filter((a) => !removedAppIds.has(a.id));
+  for (const id of removedAppIds) delete layout.positions[id];
+  layout.order = layout.order.filter((id) => !removedAppIds.has(id));
   if (new Set(layout.apps.map((a) => a.id)).size !== layout.apps.length)
     throw Error("App ID重复");
   if (new Set(layout.widgets.map((a) => a.id)).size !== layout.widgets.length)

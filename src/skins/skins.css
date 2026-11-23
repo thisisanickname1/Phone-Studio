@@ -320,9 +320,23 @@
   text-align: left;
   border-bottom: 1px solid #eee;
 }
-.contact-self .catalog-avatar {
+.contact-initials {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #aaa4b4, #78748e);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+.contact-self .contact-initials {
   width: 49px;
   height: 49px;
+  font-size: 20px;
 }
 .contact-self small {
   display: block;
@@ -334,7 +348,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.native-contacts .catalog-row > .catalog-avatar {
+.native-contacts .catalog-row > .contact-initials {
   flex: none;
 }
 .photo-mosaic {

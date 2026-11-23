@@ -111,6 +111,16 @@ export function Avatar({
     </span>
   );
 }
+export function ContactAvatar({ name }: { name: string }) {
+  const words = name.trim().split(/\s+/);
+  const first = Array.from(words[0])[0] ?? "人";
+  const last = words.length > 1 ? Array.from(words[words.length - 1])[0] : "";
+  return (
+    <span aria-hidden="true" className="contact-initials">
+      {(first + last).toUpperCase()}
+    </span>
+  );
+}
 export function Media({
   item,
   className = "",
