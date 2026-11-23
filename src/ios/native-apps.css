@@ -807,6 +807,134 @@
   padding: 25px;
   font-size: 22px;
 }
+.ios18 .app-screen:has(.weather-map-sheet),
+.ios18 .weather-native-sheet.weather-map-sheet {
+  background: #111d2c;
+}
+.ios18 .calibrated-weather:has(.weather-map-sheet) .weather-native-toolbar {
+  visibility: hidden;
+}
+.ios18 .phone-screen:has(.weather-map-sheet) .home-indicator:after {
+  background: #fff;
+}
+.weather-region {
+  --weather-map-accent: #b8e6ee;
+  display: grid;
+  gap: 12px;
+}
+.weather-region[data-layer="rain"] {
+  --weather-map-accent: #b8d3ff;
+}
+.weather-region[data-layer="aqi"] {
+  --weather-map-accent: #f4d37e;
+}
+.weather-map-layers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  border-radius: 12px;
+  background: #ffffff0b;
+  padding: 4px;
+}
+.weather-map-layers > button {
+  min-height: 36px;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #c9d5e2;
+  font-size: 13px;
+}
+.weather-map-layers > button[aria-pressed="true"] {
+  background: #334858;
+  color: var(--weather-map-accent);
+  font-weight: 600;
+}
+.weather-map-stage {
+  position: relative;
+  aspect-ratio: 9 / 10;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #192e3c;
+  box-shadow: 0 0 0 1px #ffffff12;
+}
+.weather-map-stage > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.weather-map-river {
+  position: absolute;
+  top: 17%;
+  left: 54%;
+  color: #afd5e8;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+.weather-map-stage > .weather-map-pin {
+  position: absolute;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 44px;
+  padding: 0;
+  transform: translate(-50%, -20px);
+  background: none;
+  border: 0;
+  color: #f5f9fe;
+  white-space: nowrap;
+}
+.weather-map-pin > span {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 5px;
+  border: 1px solid #8fa9b84f;
+  border-radius: 20px;
+  background: #122534;
+  color: var(--weather-map-accent);
+  font-size: 16px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.weather-map-pin[aria-pressed="true"] > span {
+  border-color: var(--weather-map-accent);
+  background: var(--weather-map-accent);
+  color: #132733;
+}
+.weather-map-pin > strong {
+  font-size: 12px;
+  text-shadow: 0 1px 4px #070f14, 0 1px 2px #070f14;
+}
+.weather-map-reading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 14px;
+  background: #ffffff0d;
+  padding: 12px 16px;
+}
+.weather-map-reading small {
+  display: block;
+  color: #becad8;
+  font-size: 12px;
+}
+.weather-map-reading strong {
+  font-size: 17px;
+}
+.weather-map-reading output {
+  color: var(--weather-map-accent);
+  font-size: 26px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.weather-map-credit {
+  color: #abb9c9;
+  font-size: 10px;
+  text-align: right;
+}
 .ios18 .weather-map-empty {
   display: flex;
   align-items: center;

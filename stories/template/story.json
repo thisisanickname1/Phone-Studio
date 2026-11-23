@@ -552,12 +552,25 @@
     ],
     "calendar": [
       {
-        "id": "test-item-calendar",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
+        "id": "calendar-monthly-exam-20260924",
+        "title": "月考",
+        "body": "月考第 1 天",
+        "time": "2026-09-24",
+        "kind": "event"
+      },
+      {
+        "id": "calendar-monthly-exam-20260925",
+        "title": "月考",
+        "body": "月考第 2 天",
+        "time": "2026-09-25",
+        "kind": "event"
+      },
+      {
+        "id": "calendar-monthly-exam-20260926",
+        "title": "月考",
+        "body": "月考第 3 天",
+        "time": "2026-09-26",
+        "kind": "event"
       }
     ],
     "clock": [
@@ -623,11 +636,68 @@
     "weather": [
       {
         "id": "test-item-weather",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
+        "title": "郑州",
+        "body": "今天晴，早晚气温低于冰点，午后回升到 7°C。北风偏干。",
+        "time": "2026-12-25 09:41",
         "kind": "text",
-        "meta": {}
+        "meta": {
+          "locationLabel": "河南 · 我的位置",
+          "temperature": "2",
+          "condition": "晴",
+          "high": "7",
+          "low": "-3",
+          "aqi": "82",
+          "aqiLabel": "良",
+          "rain": "0%",
+          "wind": "北风 11 km/h",
+          "sunrise": "07:29",
+          "hourly": "[{\"time\":\"现在\",\"temperature\":\"2\"},{\"time\":\"10时\",\"temperature\":\"3\"},{\"time\":\"11时\",\"temperature\":\"4\"},{\"time\":\"12时\",\"temperature\":\"6\"},{\"time\":\"13时\",\"temperature\":\"7\"}]",
+          "daily": "[{\"label\":\"今天\",\"low\":\"-3\",\"high\":\"7\"},{\"label\":\"周六\",\"low\":\"-4\",\"high\":\"6\"},{\"label\":\"周日\",\"low\":\"-5\",\"high\":\"5\"},{\"label\":\"周一\",\"low\":\"-4\",\"high\":\"6\"},{\"label\":\"周二\",\"low\":\"-3\",\"high\":\"8\"},{\"label\":\"周三\",\"low\":\"-2\",\"high\":\"9\"},{\"label\":\"周四\",\"low\":\"-3\",\"high\":\"7\"}]",
+          "mapRegion": "zhengzhou",
+          "mapPlaces": "[{\"name\":\"荥阳\",\"longitude\":113.384,\"latitude\":34.787,\"temperature\":1,\"rain\":0,\"aqi\":76},{\"name\":\"新郑\",\"longitude\":113.74,\"latitude\":34.395,\"temperature\":3,\"rain\":5,\"aqi\":79},{\"name\":\"中牟\",\"longitude\":114.023,\"latitude\":34.721,\"temperature\":2,\"rain\":0,\"aqi\":85}]"
+        }
+      },
+      {
+        "id": "weather-barcelona",
+        "title": "巴塞罗那",
+        "body": "今天晴间多云，清晨偏凉，白天最高 14°C。",
+        "time": "2026-12-25 02:41",
+        "kind": "text",
+        "meta": {
+          "locationLabel": "西班牙",
+          "temperature": "8",
+          "condition": "晴间多云",
+          "high": "14",
+          "low": "6",
+          "aqi": "34",
+          "aqiLabel": "优",
+          "rain": "10%",
+          "wind": "西北风 9 km/h",
+          "sunrise": "08:15",
+          "hourly": "[{\"time\":\"现在\",\"temperature\":\"8\"},{\"time\":\"03时\",\"temperature\":\"8\"},{\"time\":\"04时\",\"temperature\":\"7\"},{\"time\":\"05时\",\"temperature\":\"7\"},{\"time\":\"06时\",\"temperature\":\"6\"}]",
+          "daily": "[{\"label\":\"今天\",\"low\":\"6\",\"high\":\"14\"},{\"label\":\"周六\",\"low\":\"7\",\"high\":\"15\"},{\"label\":\"周日\",\"low\":\"8\",\"high\":\"14\"},{\"label\":\"周一\",\"low\":\"7\",\"high\":\"13\"},{\"label\":\"周二\",\"low\":\"6\",\"high\":\"14\"},{\"label\":\"周三\",\"low\":\"7\",\"high\":\"15\"},{\"label\":\"周四\",\"low\":\"7\",\"high\":\"14\"}]"
+        }
+      },
+      {
+        "id": "weather-cairo",
+        "title": "开罗",
+        "body": "今天晴，清晨凉爽，午后最高 22°C。",
+        "time": "2026-12-25 03:41",
+        "kind": "text",
+        "meta": {
+          "locationLabel": "埃及",
+          "temperature": "13",
+          "condition": "晴",
+          "high": "22",
+          "low": "11",
+          "aqi": "76",
+          "aqiLabel": "良",
+          "rain": "0%",
+          "wind": "北风 8 km/h",
+          "sunrise": "06:50",
+          "hourly": "[{\"time\":\"现在\",\"temperature\":\"13\"},{\"time\":\"04时\",\"temperature\":\"12\"},{\"time\":\"05时\",\"temperature\":\"12\"},{\"time\":\"06时\",\"temperature\":\"11\"},{\"time\":\"07时\",\"temperature\":\"12\"}]",
+          "daily": "[{\"label\":\"今天\",\"low\":\"11\",\"high\":\"22\"},{\"label\":\"周六\",\"low\":\"12\",\"high\":\"23\"},{\"label\":\"周日\",\"low\":\"12\",\"high\":\"22\"},{\"label\":\"周一\",\"low\":\"11\",\"high\":\"21\"},{\"label\":\"周二\",\"low\":\"10\",\"high\":\"20\"},{\"label\":\"周三\",\"low\":\"11\",\"high\":\"21\"},{\"label\":\"周四\",\"low\":\"12\",\"high\":\"22\"}]"
+        }
       }
     ],
     "settings": [

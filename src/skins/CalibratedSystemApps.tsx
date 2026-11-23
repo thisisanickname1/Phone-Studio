@@ -24,6 +24,7 @@ import {
 import { useSkinState } from "../skinState";
 import type { Item } from "../schema";
 import { meta, type Props } from "./shared";
+import { WeatherMap } from "./WeatherMap";
 import "../ios/native-apps.css";
 const healthTypes = [
   { id: "cycle", title: "经期追踪", icon: Activity, color: "#7361ff" },
@@ -547,7 +548,7 @@ export function WeatherSkin(p: Props) {
         </button>
       </nav>
       {sheet && (
-        <div className="weather-native-sheet">
+        <div className={`weather-native-sheet${sheet === "天气地图" ? " weather-map-sheet" : ""}`}>
           <header>
             <button aria-label="返回天气" onClick={() => setSheet("")}>
               <ChevronLeft />
@@ -590,10 +591,7 @@ export function WeatherSkin(p: Props) {
               )}
             </>
           ) : sheet === "天气地图" ? (
-            <div className="weather-map-empty">
-              <Map size={60} />
-              <p>暂无地图数据</p>
-            </div>
+            <WeatherMap key={item?.id} item={item} />
           ) : (
             <div className="weather-section-detail">
               <h2>{item?.title || "暂无城市"}</h2>

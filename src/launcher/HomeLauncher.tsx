@@ -62,7 +62,8 @@ function WidgetFace({
   work: Work;
   time: string;
 }) {
-  const date = new Date((work.phone.date || "2026-10-25") + "T12:00:00Z");
+  const dateText = work.phone.date || "2026-10-25";
+  const date = new Date(dateText + "T12:00:00Z");
   const weather = work.data.weather?.[0];
   return (
     <div className={"widget-face widget-" + widget.type}>
@@ -75,7 +76,10 @@ function WidgetFace({
             }).format(date)}
           </span>
           <b className="widget-day">{date.getUTCDate()}</b>
-          <small>{work.data.calendar?.[0]?.title || "今天没有日程"}</small>
+          <small>
+            {work.data.calendar?.find((item) => item.time.startsWith(dateText))
+              ?.title || "今天没有日程"}
+          </small>
         </>
       ) : widget.type === "clock" ? (
         <>

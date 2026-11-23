@@ -430,9 +430,8 @@ export function CalendarSkin(p: Props) {
     [year, setYear] = useState(2026),
     [day, setDay] = useState(1);
   const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-  const list = p.items.filter((i) =>
-    i.time.startsWith(`${prefix}-${String(day).padStart(2, "0")}`),
-  );
+  const selectedDate = `${prefix}-${String(day).padStart(2, "0")}`;
+  const list = p.items.filter((i) => i.time.startsWith(selectedDate));
   const move = (d: number) => {
     const date = new Date(Date.UTC(year, month + d, 1));
     setYear(date.getUTCFullYear());
@@ -487,7 +486,7 @@ export function CalendarSkin(p: Props) {
             key={i.id}
             onClick={() => p.onItem(i)}
           >
-            <time>{i.time.slice(-5)}</time>
+            <time>{i.time === selectedDate ? "全天" : i.time.slice(-5)}</time>
             <div>
               <strong>{i.title}</strong>
               <p>{meta(i, "location", i.body)}</p>
