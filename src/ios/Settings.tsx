@@ -138,7 +138,7 @@ export function NativeSettings({
                 {wifiNetworks.some((name) => name !== wifiNetwork) && (
                   <>
                     <p className="settings-section-label">其他网络</p>
-                    <div className="settings-group">
+                    <div className="settings-group settings-wifi-networks">
                       {wifiNetworks
                         .filter((name) => name !== wifiNetwork)
                         .map((name) =>

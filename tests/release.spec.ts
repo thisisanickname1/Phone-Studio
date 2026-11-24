@@ -284,12 +284,45 @@ test("the school phone starts on 4G with two SIMs and nearby Wi-Fi", async ({
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const settings = page.locator(".native-settings");
   await settings.getByRole("button", { name: /无线局域网/ }).click();
-  await expect(settings.getByText("其他网络")).toBeVisible();
+  for (const [width, height] of [
+    [393, 852],
+    [1280, 900],
+  ]) {
+    await page.setViewportSize({ width, height });
+    const heading = settings.getByText("其他网络", { exact: true });
+    const list = settings.locator(".settings-wifi-networks");
+    const switchTrack = settings.locator(".ios-toggle");
+    const switchRow = settings.locator(".settings-native-row").filter({
+      has: page.getByRole("switch", { name: "Wi-Fi", exact: true }),
+    });
+    await expect(heading).toBeVisible();
+    await expect
+      .poll(async () => {
+        const label = (await heading.boundingBox())!;
+        const card = (await list.boundingBox())!;
+        return card.y - (label.y + label.height);
+      })
+      .toBeGreaterThan(4);
+    await expect
+      .poll(async () => {
+        const toggle = (await switchTrack.boundingBox())!;
+        const row = (await switchRow.boundingBox())!;
+        return row.x + row.width - toggle.x - toggle.width;
+      })
+      .toBeLessThan(20);
+  }
   await settings
     .getByRole("button", { name: "S城一高_访客", exact: true })
     .click();
   await expect(status.locator(".status-wifi")).toBeVisible();
-  await expect(settings.getByText("我的网络")).toBeVisible();
+  const connectedHeading = settings.getByText("我的网络", { exact: true });
+  await expect(connectedHeading).toBeVisible();
+  const connectedCard = connectedHeading.locator(
+    "xpath=following-sibling::div[1]",
+  );
+  const labelBounds = (await connectedHeading.boundingBox())!;
+  const cardBounds = (await connectedCard.boundingBox())!;
+  expect(cardBounds.y - labelBounds.y - labelBounds.height).toBeGreaterThan(4);
   await settings.getByRole("switch", { name: "Wi-Fi" }).uncheck();
   await expect(status.locator(".status-network-type")).toHaveText("4G");
 });

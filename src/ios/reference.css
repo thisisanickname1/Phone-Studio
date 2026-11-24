@@ -71,6 +71,17 @@
   right: 16px;
   background: #dcdce0;
 }
+.ios18 .native-settings .settings-group:has(+ .settings-section-label) {
+  margin-bottom: 20px;
+}
+.ios18 .native-settings .settings-wifi-networks > .settings-native-row:after {
+  left: 14px;
+  right: 14px;
+  height: 1px;
+}
+.ios18 .native-settings .settings-wifi-networks > .settings-native-row + .settings-native-row:before {
+  content: none;
+}
 .ios18 .native-settings .settings-native-row small {
   font-size: 17px;
   color: #999;
