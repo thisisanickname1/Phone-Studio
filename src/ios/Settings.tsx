@@ -1,7 +1,6 @@
 import { useState, type ComponentType } from "react";
 import {
   Plane,
-  Wifi,
   Bluetooth,
   Signal,
   Battery,
@@ -22,8 +21,13 @@ import {
 import type { DeviceConnectivity } from "../deviceConnectivity";
 import type { Work, Item } from "../schema";
 import { IOSToggle } from "../vendor/konsta/Toggle";
+import { ControlGlyph } from "./ControlGlyph";
 import { NavigationPage, useNavigation } from "./Navigation";
 type Row = [ComponentType<{ size?: number }>, string, string];
+function Wifi({ size }: { size?: number }) {
+  return <ControlGlyph name="wifi" size={size} />;
+}
+
 const groups: Row[][] = [
   [
     [Plane, "飞行模式", "#ff9500"],

@@ -15,8 +15,8 @@ const glyphs = {
   ),
   wifi: (
     <>
-      <path d="M3 7.6a14.4 14.4 0 0 1 18 0M6.1 11.1a9.5 9.5 0 0 1 11.8 0M9.1 14.6a4.7 4.7 0 0 1 5.8 0" />
-      <circle cx="12" cy="18.7" r="1.8" fill="currentColor" stroke="none" />
+      <path d="M3 8.3a14.3 14.3 0 0 1 18 0M7.2 13.2a7.7 7.7 0 0 1 9.6 0" />
+      <circle cx="12" cy="17.9" r="1.9" fill="currentColor" stroke="none" />
     </>
   ),
   bluetooth: <path d="m6.5 6.8 11.2 10.3-5.2 4.2V2.7l5.2 4.2L6.5 17.2" />,
