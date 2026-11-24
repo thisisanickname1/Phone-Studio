@@ -9,9 +9,19 @@
     "date": "2026-12-25",
     "time": "09:41",
     "battery": 94,
-    "network": "5G",
+    "network": "4G",
     "passcode": "0101",
-    "wallpaper": "custom"
+    "wallpaper": "custom",
+    "cellularData": true,
+    "carriers": [
+      "中国移动",
+      "Vodafone Egypt"
+    ],
+    "wifiNetworks": [
+      "S城一高_访客",
+      "S城一高_图书馆",
+      "闹麻麻小卖部"
+    ]
   },
   "installedApps": [
     "appstore",

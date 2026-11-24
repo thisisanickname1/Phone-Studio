@@ -19,6 +19,7 @@ import {
   Globe,
   Mic,
 } from "lucide-react";
+import type { DeviceConnectivity } from "../deviceConnectivity";
 import type { Work, Item } from "../schema";
 import { IOSToggle } from "../vendor/konsta/Toggle";
 import { NavigationPage, useNavigation } from "./Navigation";
@@ -47,12 +48,14 @@ const groups: Row[][] = [
 ];
 export function NativeSettings({
   work,
+  connectivity,
   items,
   creator,
   onItem,
   onSettings,
 }: {
   work: Work;
+  connectivity: DeviceConnectivity;
   items: Item[];
   creator: boolean;
   onItem: (i: Item) => void;
@@ -60,10 +63,19 @@ export function NativeSettings({
 }) {
   const nav = useNavigation(),
     [query, setQuery] = useState(""),
-    [airplane, setAirplane] = useState(false),
-    [wifi, setWifi] = useState(true),
     [bluetooth, setBluetooth] = useState(true),
     [lowPower, setLowPower] = useState(false);
+  const {
+    airplaneMode,
+    setAirplaneMode,
+    wifiEnabled,
+    setWifiEnabled,
+    wifiNetwork,
+    wifiNetworks,
+    setWifiNetwork,
+    cellularEnabled,
+    setCellularEnabled,
+  } = connectivity;
   const row = (label: string, value?: string, click?: () => void) => (
     <button key={label} className="settings-native-row" onClick={click}>
       <span>{label}</span>
@@ -107,24 +119,51 @@ export function NativeSettings({
         return (
           <>
             <div className="settings-group">
-              {toggle("Wi-Fi", wifi, setWifi)}
+              {toggle("Wi-Fi", wifiEnabled, setWifiEnabled)}
             </div>
-            {wifi && (
+            {wifiEnabled && (
               <>
-                <p className="settings-section-label">我的网络</p>
-                <div className="settings-group">
-                  <div className="settings-native-row">
-                    <Check size={18} color="#007aff" />
-                    <span>{work.phone.network}</span>
-                    <Wifi size={18} />
-                  </div>
-                </div>
+                {wifiNetwork && (
+                  <>
+                    <p className="settings-section-label">我的网络</p>
+                    <div className="settings-group">
+                      <div className="settings-native-row">
+                        <Check size={18} color="#007aff" />
+                        <span>{wifiNetwork}</span>
+                        <Wifi size={18} />
+                      </div>
+                    </div>
+                  </>
+                )}
+                {wifiNetworks.some((name) => name !== wifiNetwork) && (
+                  <>
+                    <p className="settings-section-label">其他网络</p>
+                    <div className="settings-group">
+                      {wifiNetworks
+                        .filter((name) => name !== wifiNetwork)
+                        .map((name) =>
+                          row(name, "", () => setWifiNetwork(name)),
+                        )}
+                    </div>
+                  </>
+                )}
                 <p className="settings-page-caption">
                   连接状态仅用于作品中的虚拟手机。
                 </p>
               </>
             )}
           </>
+        );
+      case "蜂窝网络":
+        return (
+          <div className="settings-group">
+            {!airplaneMode &&
+              toggle("蜂窝数据", cellularEnabled, setCellularEnabled)}
+            {cellularEnabled && row("当前网络", work.phone.network)}
+            {work.phone.carriers?.map((name, index) =>
+              row(index === 0 ? "主号" : "副号", name),
+            )}
+          </div>
         );
       case "蓝牙":
         return (
@@ -243,15 +282,15 @@ export function NativeSettings({
                       {name === "飞行模式" ? (
                         <IOSToggle
                           label="飞行模式"
-                          checked={airplane}
-                          onChange={setAirplane}
+                          checked={airplaneMode}
+                          onChange={setAirplaneMode}
                         />
                       ) : (
                         <>
                           <small>
                             {name === "无线局域网"
-                              ? wifi
-                                ? "未连接"
+                              ? wifiEnabled
+                                ? wifiNetwork || "未连接"
                                 : "关闭"
                               : name === "蓝牙"
                                 ? bluetooth
@@ -259,9 +298,13 @@ export function NativeSettings({
                                   : "关闭"
                                 : name === "VPN"
                                   ? "未连接"
-                                  : name === "蜂窝网络" || name === "个人热点"
-                                    ? "关闭"
-                                    : ""}
+                                  : name === "蜂窝网络"
+                                    ? cellularEnabled
+                                      ? work.phone.network
+                                      : "关闭"
+                                    : name === "个人热点"
+                                      ? "关闭"
+                                      : ""}
                           </small>
                           <ChevronRight size={16} />
                         </>
@@ -275,7 +318,8 @@ export function NativeSettings({
         {items
           .filter(
             (i) =>
-              !!nav.page && (i.folder === nav.page || i.title.includes(nav.page)),
+              !!nav.page &&
+              (i.folder === nav.page || i.title.includes(nav.page)),
           )
           .map((i) => (
             <button className="record-row" key={i.id} onClick={() => onItem(i)}>

@@ -5,7 +5,7 @@
 |字段|用途|
 |---|---|
 |scriptVersion/id/title/revision|脚本版本1、稳定作品ID、标题、正整数内容修订号|
-|description/phone|简介；机主owner、date、time、passcode、wallpaper、theme等|
+|description/phone|简介；机主owner、date、time、passcode、wallpaper、theme等。network 设置蜂窝制式，cellularData 设置默认是否开启流量，carriers 依次填写主、副号运营商，wifiNetworks 填写附近网络列表|
 |installedApps|注册 App ID，或完整 App 配置（名称、图标、文件夹、Dock、visible、installed）；顺序即桌面顺序|
 |excludedApps|从本作品的桌面和 App Store 移除的 App ID，且不能与 installedApps 重叠|
 |contacts|id、name、phone、avatar、bio。id 为 owner 的记录用于填写机主号码，姓名取自 phone.owner|

@@ -1,4 +1,8 @@
 import { DEVICE_WIDTH, DEVICE_HEIGHT } from "./deviceMetrics";
+import {
+  useDeviceConnectivity,
+  type DeviceConnectivity,
+} from "./deviceConnectivity";
 import { StatusGlyph } from "./ios/StatusGlyph";
 import { SocialDetail, socialDetailApps } from "./skins/SocialDetails";
 import { NativeCalculator } from "./ios/Calculator";
@@ -136,6 +140,7 @@ function PhoneRuntime({
   onRuntime?: (s: Runtime) => void;
 }) {
   const [app, setApp] = useState("");
+  const connectivity = useDeviceConnectivity(work.phone);
   const [homeRequest, setHomeRequest] = useState(0);
   const [locked, setLocked] = useState(!creator);
   const [pinOpen, setPinOpen] = useState(false);
@@ -436,7 +441,13 @@ function PhoneRuntime({
               aria-label="控制中心"
             >
               <StatusGlyph kind="cellular" />
-              <StatusGlyph kind="wifi" />
+              {connectivity.wifiNetwork ? (
+                <StatusGlyph kind="wifi" />
+              ) : connectivity.cellularEnabled && work.phone.network ? (
+                <span className="status-network-type">
+                  {work.phone.network}
+                </span>
+              ) : null}
               <span
                 className={`ios-battery${work.phone.battery <= 20 ? " low-battery" : ""}`}
               >
@@ -484,6 +495,7 @@ function PhoneRuntime({
                   ]}
                   creator={creator}
                   state={s}
+                  connectivity={connectivity}
                   onRead={(id) => event("read", id)}
                   onEdit={(item, appId = app) => onEdit?.(appId, item)}
                   onAdd={(appId = app) => onAdd?.(appId)}
@@ -570,6 +582,8 @@ function PhoneRuntime({
             <ControlCenter
               battery={work.phone.battery}
               network={work.phone.network}
+              carriers={work.phone.carriers}
+              connectivity={connectivity}
               close={() => setPanel("")}
             />
           )}
@@ -892,6 +906,7 @@ function AppContent({
   items,
   creator,
   state,
+  connectivity,
   onRead,
   onEdit,
   onAdd,
@@ -905,6 +920,7 @@ function AppContent({
   items: Item[];
   creator: boolean;
   state: Runtime;
+  connectivity: DeviceConnectivity;
   onRead: (id: string) => void;
   onEdit: (item: Item, appId?: string) => void;
   onAdd: (appId?: string) => void;
@@ -1114,6 +1130,7 @@ function AppContent({
       {app.id === "settings" && !detail ? (
         <NativeSettings
           work={work}
+          connectivity={connectivity}
           items={items}
           creator={creator}
           onItem={read}

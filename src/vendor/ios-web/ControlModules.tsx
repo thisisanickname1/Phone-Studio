@@ -5,6 +5,7 @@
  * Changes: semantic labels, controlled values, vertical sliders, isolated CSS.
  */
 import { useState } from "react";
+import type { DeviceConnectivity } from "../../deviceConnectivity";
 import {
   Wifi,
   Bluetooth,
@@ -16,11 +17,22 @@ import {
   Link,
   Globe,
 } from "lucide-react";
-export function ConnectivityModule() {
-  const [airplaneMode, setAirplaneMode] = useState(false);
-  const [wifiEnabled, setWifiEnabled] = useState(true);
+export function ConnectivityModule({
+  connectivity,
+  onNetwork,
+}: {
+  connectivity: DeviceConnectivity;
+  onNetwork: () => void;
+}) {
+  const {
+    airplaneMode,
+    setAirplaneMode,
+    wifiEnabled,
+    setWifiEnabled,
+    cellularEnabled,
+    setCellularEnabled,
+  } = connectivity;
   const [bluetoothEnabled, setBluetoothEnabled] = useState(true);
-  const [cellularEnabled, setCellularEnabled] = useState(false);
   const [airdrop, setAirdrop] = useState(true),
     [hotspot, setHotspot] = useState(false);
   return (
@@ -52,6 +64,7 @@ export function ConnectivityModule() {
       <span className="cc-small-connections">
         <button
           aria-label="蜂窝数据"
+          disabled={airplaneMode}
           aria-pressed={cellularEnabled}
           className={cellularEnabled ? "green" : ""}
           onClick={() => setCellularEnabled(!cellularEnabled)}
@@ -74,10 +87,7 @@ export function ConnectivityModule() {
         >
           <Link />
         </button>
-        <button
-          aria-label="网络连接"
-          onClick={() => setCellularEnabled(!cellularEnabled)}
-        >
+        <button aria-label="网络连接" onClick={onNetwork}>
           <Globe />
         </button>
       </span>

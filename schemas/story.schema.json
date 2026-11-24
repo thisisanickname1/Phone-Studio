@@ -60,6 +60,36 @@
         "network": {
           "type": "string"
         },
+        "cellularData": {
+          "type": "boolean"
+        },
+        "carriers": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "wifiNetworks": {
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          }
+        },
         "notifications": {
           "type": "boolean"
         }

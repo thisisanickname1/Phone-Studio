@@ -105,6 +105,14 @@ export const workSchema = z.object({
     time: z.string(),
     battery: z.number().min(0).max(100),
     network: z.string(),
+    cellularData: z.boolean().optional(),
+    carriers: z
+      .tuple([
+        z.string().trim().min(1).max(40),
+        z.string().trim().min(1).max(40),
+      ])
+      .optional(),
+    wifiNetworks: z.array(z.string().trim().min(1).max(32)).max(8).optional(),
     notifications: z.boolean(),
   }),
   apps: z

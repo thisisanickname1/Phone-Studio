@@ -26,6 +26,12 @@
   width: 20px;
   height: 15px;
 }
+.ios18 .signals .status-network-type {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+  flex: none;
+}
 .ios18 .signals .status-wifi {
   width: 18px;
   height: 16px;

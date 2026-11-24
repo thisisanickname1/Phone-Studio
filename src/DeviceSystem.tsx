@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { Work } from "./schema";
+import type { DeviceConnectivity } from "./deviceConnectivity";
 export const KeyboardContext = createContext<(open: boolean) => void>(() => {});
 export function NativeComposer({
   creator,
@@ -233,10 +234,14 @@ export function DeviceLock({
 export function ControlCenter({
   battery = 94,
   network,
+  carriers = ["中国移动", "中国电信"],
+  connectivity,
   close,
 }: {
   battery?: number;
   network: string;
+  carriers?: NonNullable<Work["phone"]["carriers"]>;
+  connectivity: DeviceConnectivity;
   close: () => void;
 }) {
   const [rotation, setRotation] = useState(true),
@@ -272,11 +277,16 @@ export function ControlCenter({
         <div>
           <span>
             <Signal size={18} />
-            <small>主号</small> 中国移动 <Wifi size={17} />
+            <small>主号</small> {carriers[0]}
+            {connectivity.wifiNetwork ? (
+              <Wifi size={17} />
+            ) : connectivity.cellularEnabled ? (
+              <small>{network}</small>
+            ) : null}
           </span>
           <span>
             <Signal size={18} />
-            <small>副号</small> 中国电信
+            <small>副号</small> {carriers[1]}
           </span>
         </div>
         <span>
@@ -301,7 +311,10 @@ export function ControlCenter({
         ))}
       </nav>
       <div className="cc-grid">
-        <ConnectivityModule />
+        <ConnectivityModule
+          connectivity={connectivity}
+          onNetwork={() => setTool("Wi-Fi")}
+        />
         <div className="cc-music">
           <div className="cc-media-top">
             <span>
@@ -391,9 +404,33 @@ export function ControlCenter({
       {tool && (
         <div className="cc-tool">
           <strong>{tool}</strong>
-          <p>
-            {tool === "屏幕镜像" ? "正在搜索作品中的设备…" : "作品内快捷控制"}
-          </p>
+          {tool === "Wi-Fi" ? (
+            <>
+              <p>
+                {connectivity.wifiEnabled
+                  ? connectivity.wifiNetwork || "未连接"
+                  : "Wi-Fi 已关闭"}
+              </p>
+              {connectivity.wifiEnabled &&
+                connectivity.wifiNetworks.length > 0 && (
+                  <div className="cc-wifi-list">
+                    {connectivity.wifiNetworks.map((name) => (
+                      <button
+                        key={name}
+                        aria-pressed={connectivity.wifiNetwork === name}
+                        onClick={() => connectivity.setWifiNetwork(name)}
+                      >
+                        <Wifi size={16} /> {name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+            </>
+          ) : (
+            <p>
+              {tool === "屏幕镜像" ? "正在搜索作品中的设备…" : "作品内快捷控制"}
+            </p>
+          )}
           <button onClick={() => setTool("")}>完成</button>
         </div>
       )}

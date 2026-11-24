@@ -239,3 +239,57 @@ test("world clock uses the story's Beijing time and each city's seasonal offset"
     await expect(clock.getByRole("switch")).toHaveCount(0);
   }
 });
+
+test("the story clock advances with the player open", async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.clock.install();
+  await page.goto("/");
+  const status = page.locator(".status-bar");
+  await expect(status.locator(".status-time")).toContainText("09:41");
+  await page.clock.runFor(61_000);
+  await expect(status.locator(".status-time")).toContainText("09:42");
+});
+
+test("the school phone starts on 4G with two SIMs and nearby Wi-Fi", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.goto("/");
+  const status = page.locator(".status-bar");
+  await expect(status.locator(".status-network-type")).toHaveText("4G");
+  await expect(status.locator(".status-wifi")).toHaveCount(0);
+  await page.getByRole("button", { name: "轻触解锁" }).click();
+  for (const digit of "0101")
+    await page
+      .getByRole("button", { name: "密码键" + digit, exact: true })
+      .click();
+  await expect(page.locator(".lock-screen")).toHaveCount(0);
+  await page.getByRole("button", { name: "控制中心", exact: true }).click();
+  const center = page.locator(".device-control");
+  await expect(center.locator(".cc-status")).toContainText("中国移动");
+  await expect(center.locator(".cc-status")).toContainText("Vodafone Egypt");
+  await expect(
+    center.getByRole("button", { name: "蜂窝数据" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await center.getByRole("button", { name: "网络连接" }).click();
+  const wifi = center.locator(".cc-tool");
+  await expect(wifi.getByText("未连接")).toBeVisible();
+  await expect(wifi.locator(".cc-wifi-list button")).toHaveText([
+    "S城一高_访客",
+    "S城一高_图书馆",
+    "闹麻麻小卖部",
+  ]);
+  await wifi.getByRole("button", { name: "完成" }).click();
+  await center.getByRole("button", { name: "关闭控制中心" }).click();
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const settings = page.locator(".native-settings");
+  await settings.getByRole("button", { name: /无线局域网/ }).click();
+  await expect(settings.getByText("其他网络")).toBeVisible();
+  await settings
+    .getByRole("button", { name: "S城一高_访客", exact: true })
+    .click();
+  await expect(status.locator(".status-wifi")).toBeVisible();
+  await expect(settings.getByText("我的网络")).toBeVisible();
+  await settings.getByRole("switch", { name: "Wi-Fi" }).uncheck();
+  await expect(status.locator(".status-network-type")).toHaveText("4G");
+});
