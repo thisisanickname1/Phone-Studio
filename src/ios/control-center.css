@@ -1,0 +1,305 @@
+.ios18 .system-panel.device-control {
+  --cc-gap: 14px;
+  --cc-card: linear-gradient(145deg, #444243df, #39363adc);
+  --cc-stroke: #fff2;
+  container: control-center / size;
+  padding: max(35px, calc(var(--ios-safe-top) - 8px)) 27px
+    calc(var(--ios-safe-bottom) + 9px);
+  background:
+    radial-gradient(ellipse 75% 37% at 8% 67%, #cc9bb8b3, transparent 90%),
+    radial-gradient(ellipse 70% 38% at 65% 59%, #89adc4bc, transparent 86%),
+    radial-gradient(ellipse 72% 44% at 89% 87%, #dba899bf, transparent 87%),
+    radial-gradient(ellipse 86% 41% at 30% 102%, #a9c9adcc, transparent 90%),
+    linear-gradient(166deg, #edeae8fb, #c9c7befb 35%, #e2dbe8fb 72%, #dce4e7fb);
+  backdrop-filter: blur(32px) saturate(1.1);
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.ios18 .phone-screen:has(.device-control) .status-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+.ios18 .phone-screen:has(.device-control) .home-indicator::after {
+  background: #242123;
+}
+.device-control .cc-header {
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  color: #383537;
+}
+.ios18 .device-control .cc-header h2 {
+  grid-column: 2;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 650;
+  text-align: center;
+}
+.device-control .cc-close {
+  grid-column: 3;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 12px;
+  background: #4242481c;
+}
+.device-control .cc-information {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-block: clamp(12px, 2.6cqh, 22px) clamp(15px, 3.2cqh, 26px);
+  color: #29282a;
+}
+.device-control .cc-info-side {
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+}
+.device-control .cc-battery {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.device-control .cc-status {
+  display: grid;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 620;
+  line-height: 19px;
+}
+.device-control .cc-status > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.device-control .cc-status small {
+  padding: 1px 4px;
+  border: 1px solid #433d4155;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 13px;
+}
+.cc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--cc-gap);
+}
+.device-control :is(.cc-connect, .cc-music, .cc-levels, .cc-quick) {
+  grid-column: span 2;
+  min-width: 0;
+}
+.device-control :is(.cc-connect, .cc-music, .cc-square, .cc-focus, .cc-slider) {
+  border: 1px solid var(--cc-stroke);
+  background: var(--cc-card);
+  color: #fff;
+}
+.device-control :is(.cc-connect, .cc-music) {
+  position: relative;
+  display: grid;
+  min-height: clamp(145px, 28cqh, 186px);
+  border-radius: 24px;
+}
+.device-control .cc-connect {
+  padding: 15px;
+}
+.device-control .cc-connect-icon {
+  width: 28px;
+  height: 24px;
+  padding: 0;
+  border-radius: 8px;
+  background: #4242481c;
+}
+.device-control .cc-connect-switches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(46px, 1fr));
+  place-items: center;
+  gap: 9px;
+}
+.device-control .cc-connect-switches button {
+  width: min(100%, 56px);
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 3px;
+  border-radius: 50%;
+  background: #f6f2e728;
+}
+.device-control .cc-connect-switches .blue {
+  background: #2d73ce;
+}
+.device-control .cc-connect-switches .green {
+  background: #438d4f;
+}
+.device-control .cc-connect-switches .orange {
+  background: #ae5e37;
+}
+.device-control .cc-music {
+  grid-template-rows: 30px 1fr 36px;
+  justify-items: center;
+  align-items: center;
+  padding: 10px 12px 13px;
+  background: linear-gradient(143deg, #484542df, #393940df);
+}
+.device-control .cc-output {
+  justify-self: end;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  border-radius: 11px;
+  background: #ffffff27;
+}
+.device-control .cc-music strong {
+  color: #f2efed;
+  font-size: 14px;
+  font-weight: 650;
+}
+.device-control .cc-play {
+  width: 55px;
+  height: 36px;
+  padding: 0;
+  border-radius: 13px;
+  background: #ffffff20;
+}
+.device-control :is(.cc-levels, .cc-quick) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  min-height: clamp(128px, 26cqh, 174px);
+}
+.device-control .cc-slider {
+  position: relative;
+  margin: 0;
+  border: 0;
+  border-radius: 24px;
+  overflow: hidden;
+}
+.device-control .cc-slider input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  opacity: 0;
+  cursor: ns-resize;
+}
+.device-control .cc-slider-fill {
+  position: absolute;
+  inset: auto 0 0;
+  background: linear-gradient(#fffefa, #edf2ee);
+}
+.device-control .cc-slider-icon {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  color: #4c5654;
+}
+.device-control .cc-slider[data-low] .cc-slider-icon {
+  color: #f9f5f0;
+}
+.device-control .cc-quick {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.device-control .cc-square {
+  padding: 0;
+  border-radius: 20px;
+}
+.device-control .cc-focus {
+  grid-column: span 2;
+  gap: 8px;
+  padding: 0 8px;
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.device-control .cc-focus-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 13px;
+  background: #b2a0c440;
+}
+.device-control .cc-square[aria-pressed="true"] {
+  background: #fcf8f5;
+  color: #b74651;
+}
+.device-control .cc-focus[aria-pressed="true"] {
+  background: #ede2f4;
+  color: #533256;
+}
+.device-control .cc-shortcut {
+  min-height: clamp(49px, 10cqh, 68px);
+}
+.device-control :is(button:focus-visible, .cc-slider:focus-within) {
+  outline: 2px solid #785d95;
+  outline-offset: 2px;
+}
+.device-control .cc-tool-shade {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  align-items: center;
+  padding: 24px;
+  background: #29252c80;
+}
+.device-control .cc-tool {
+  max-height: 100%;
+  overflow-y: auto;
+  background: #3b343a;
+  border: 1px solid #e7dce850;
+  border-radius: 23px;
+  padding: 19px;
+  box-shadow: 0 14px 35px #1e1a2088;
+}
+.device-control .cc-tool > strong {
+  font-size: 17px;
+}
+.device-control .cc-tool p {
+  margin: 10px 0 14px;
+  color: #eee4e9;
+  font-size: 14px;
+}
+.device-control .cc-network-extra {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.device-control .cc-wifi-list {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.device-control :is(.cc-wifi-list, .cc-network-extra) button {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 8px;
+  border-radius: 9px;
+  background: #f7f2f216;
+}
+.device-control
+  :is(.cc-wifi-list, .cc-network-extra)
+  button[aria-pressed="true"] {
+  background: #795f85;
+}
+.device-control .cc-tool-done {
+  padding: 8px 13px;
+  border-radius: 10px;
+  background: #ede2f4;
+  color: #513654;
+}
+@container control-center (max-height: 625px) {
+  .device-control .cc-extra {
+    display: none;
+  }
+}

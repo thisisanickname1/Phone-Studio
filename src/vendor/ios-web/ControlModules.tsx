@@ -6,23 +6,11 @@
  */
 import { useState } from "react";
 import type { DeviceConnectivity } from "../../deviceConnectivity";
-import {
-  Wifi,
-  Bluetooth,
-  Plane,
-  Signal,
-  Sun,
-  Volume2,
-  Radio,
-  Link,
-  Globe,
-} from "lucide-react";
+import { ControlGlyph } from "../../ios/ControlGlyph";
 export function ConnectivityModule({
   connectivity,
-  onNetwork,
 }: {
   connectivity: DeviceConnectivity;
-  onNetwork: () => void;
 }) {
   const {
     airplaneMode,
@@ -33,35 +21,17 @@ export function ConnectivityModule({
     setCellularEnabled,
   } = connectivity;
   const [bluetoothEnabled, setBluetoothEnabled] = useState(true);
-  const [airdrop, setAirdrop] = useState(true),
-    [hotspot, setHotspot] = useState(false);
   return (
-    <div className="cc-connect">
-      <button
-        aria-label="飞行模式"
-        aria-pressed={airplaneMode}
-        className={airplaneMode ? "orange" : ""}
-        onClick={() => setAirplaneMode(!airplaneMode)}
-      >
-        <Plane />
-      </button>
-      <button
-        aria-label="隔空投送"
-        aria-pressed={airdrop}
-        className={airdrop ? "blue" : ""}
-        onClick={() => setAirdrop(!airdrop)}
-      >
-        <Radio />
-      </button>
-      <button
-        aria-label="Wi-Fi"
-        aria-pressed={wifiEnabled}
-        className={wifiEnabled ? "blue" : ""}
-        onClick={() => setWifiEnabled(!wifiEnabled)}
-      >
-        <Wifi />
-      </button>
-      <span className="cc-small-connections">
+    <section className="cc-connect" aria-label="连接">
+      <div className="cc-connect-switches">
+        <button
+          aria-label="飞行模式"
+          aria-pressed={airplaneMode}
+          className={airplaneMode ? "orange" : ""}
+          onClick={() => setAirplaneMode(!airplaneMode)}
+        >
+          <ControlGlyph name="airplane" size={34} />
+        </button>
         <button
           aria-label="蜂窝数据"
           disabled={airplaneMode}
@@ -69,7 +39,15 @@ export function ConnectivityModule({
           className={cellularEnabled ? "green" : ""}
           onClick={() => setCellularEnabled(!cellularEnabled)}
         >
-          <Signal />
+          <ControlGlyph name="cellular" size={32} />
+        </button>
+        <button
+          aria-label="Wi-Fi"
+          aria-pressed={wifiEnabled}
+          className={wifiEnabled ? "blue" : ""}
+          onClick={() => setWifiEnabled(!wifiEnabled)}
+        >
+          <ControlGlyph name="wifi" size={32} />
         </button>
         <button
           aria-label="蓝牙"
@@ -77,21 +55,10 @@ export function ConnectivityModule({
           className={bluetoothEnabled ? "blue" : ""}
           onClick={() => setBluetoothEnabled(!bluetoothEnabled)}
         >
-          <Bluetooth />
+          <ControlGlyph name="bluetooth" size={32} />
         </button>
-        <button
-          aria-label="个人热点"
-          aria-pressed={hotspot}
-          onClick={() => setHotspot(!hotspot)}
-          className={hotspot ? "green" : ""}
-        >
-          <Link />
-        </button>
-        <button aria-label="网络连接" onClick={onNetwork}>
-          <Globe />
-        </button>
-      </span>
-    </div>
+      </div>
+    </section>
   );
 }
 export function SliderModule({
@@ -103,9 +70,9 @@ export function SliderModule({
   value: number;
   onChange: (value: number) => void;
 }) {
-  const Icon = type === "brightness" ? Sun : Volume2;
+  const glyph = type === "volume" && value === 0 ? "mute" : type;
   return (
-    <label className="cc-slider">
+    <label className="cc-slider" data-low={value < 20 || undefined}>
       <input
         aria-label={type === "brightness" ? "屏幕亮度" : "音量"}
         type="range"
@@ -121,8 +88,8 @@ export function SliderModule({
             )?.style.setProperty("--screen-dim", String((100 - value) / 180));
         }}
       />
-      <span style={{ height: value + "%" }} />
-      <Icon />
+      <span className="cc-slider-fill" style={{ height: value + "%" }} />
+      <ControlGlyph name={glyph} size={29} className="cc-slider-icon" />
     </label>
   );
 }

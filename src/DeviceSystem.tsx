@@ -11,33 +11,17 @@ import {
   Camera,
   Delete,
   ChevronDown,
-  Play,
-  SkipForward,
-  Moon,
-  RotateCcw,
-  Monitor,
-  Timer,
-  Calculator,
+  X,
   Globe,
   Mic,
   ArrowUp,
-  ChevronUp,
-  Plus,
-  Power,
-  Signal,
-  House,
-  ScanLine,
-  Circle,
   Radio,
-  Wifi,
   Battery,
-  Heart,
-  Music2,
-  Airplay,
-  ChevronRight,
-  Lock,
+  Link,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { ControlGlyph } from "./ios/ControlGlyph";
+import "./ios/control-center.css";
 import type { Work } from "./schema";
 import type { DeviceConnectivity } from "./deviceConnectivity";
 export const KeyboardContext = createContext<(open: boolean) => void>(() => {});
@@ -189,22 +173,6 @@ export function DeviceLock({
                     onClick={() => digit(n)}
                   >
                     <b>{n}</b>
-                    <small>
-                      {
-                        [
-                          "",
-                          "",
-                          "ABC",
-                          "DEF",
-                          "GHI",
-                          "JKL",
-                          "MNO",
-                          "PQRS",
-                          "TUV",
-                          "WXYZ",
-                        ][Number(n)]
-                      }
-                    </small>
                   </button>
                 ) : (
                   <span key={i} />
@@ -250,194 +218,183 @@ export function ControlCenter({
   const [brightness, setBrightness] = useState(50),
     [volume, setVolume] = useState(25);
   const [tool, setTool] = useState("");
+  const [airdrop, setAirdrop] = useState(true);
+  const [hotspot, setHotspot] = useState(false);
   return (
     <motion.div
       className="system-panel device-control"
-      initial={{ y: -70, opacity: 0 }}
+      initial={{ y: -36, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -100, opacity: 0 }}
     >
-      <button className="cc-close" aria-label="关闭控制中心" onClick={close}>
-        <Power />
-      </button>
-      <button
-        className="cc-edit"
-        aria-label="控制中心编辑"
-        onClick={() => setTool("编辑控制")}
-      >
-        <Plus />
-      </button>
-      <div className="cc-current">
-        <span>
-          <Airplay size={13} />
-        </span>
-        控制中心 <ChevronRight size={16} />
-      </div>
-      <div className="cc-status" aria-label={"蜂窝网络 " + network}>
-        <div>
+      <header className="cc-header">
+        <h2>控制中心</h2>
+        <button className="cc-close" aria-label="关闭控制中心" onClick={close}>
+          <X size={19} />
+        </button>
+      </header>
+      <div className="cc-information">
+        <div className="cc-status" aria-label="运营商">
           <span>
-            <Signal size={18} />
-            <small>主号</small> {carriers[0]}
+            <ControlGlyph name="signal" size={17} />
+            <small>主号</small>
+            {carriers[0]}
             {connectivity.wifiNetwork ? (
-              <Wifi size={17} />
-            ) : connectivity.cellularEnabled ? (
+              <span role="img" aria-label="Wi-Fi 已连接">
+                <ControlGlyph name="wifi" size={15} />
+              </span>
+            ) : connectivity.cellularEnabled && network ? (
               <small>{network}</small>
             ) : null}
           </span>
           <span>
-            <Signal size={18} />
-            <small>副号</small> {carriers[1]}
+            <ControlGlyph name="signal" size={17} />
+            <small>副号</small>
+            {carriers[1]}
           </span>
         </div>
-        <span>
-          <Lock size={13} /> {battery}% <Battery size={27} />
-        </span>
+        <div className="cc-info-side">
+          <span className="cc-battery">
+            {battery}%{" "}
+            <Battery size={24} strokeWidth={2.45} aria-hidden="true" />
+          </span>
+          <button
+            className="cc-connect-icon"
+            aria-label="网络连接"
+            onClick={() => setTool("Wi-Fi")}
+          >
+            <Globe size={15} strokeWidth={2.45} />
+          </button>
+        </div>
       </div>
-      <nav className="cc-page-rail" aria-label="控制中心分类">
-        {[Heart, Music2, House, Radio].map((Icon, i) => (
-          <button
-            key={i}
-            aria-label={["常用控制", "媒体控制", "家庭控制", "连接控制"][i]}
-            onClick={() =>
-              document
-                .querySelector(
-                  [".cc-grid", ".cc-music", ".cc-home", ".cc-connect"][i],
-                )
-                ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
-            }
-          >
-            <Icon fill={i === 0 ? "currentColor" : "none"} />
-          </button>
-        ))}
-      </nav>
       <div className="cc-grid">
-        <ConnectivityModule
-          connectivity={connectivity}
-          onNetwork={() => setTool("Wi-Fi")}
-        />
-        <div className="cc-music">
-          <div className="cc-media-top">
-            <span>
-              <Music2 size={28} />
-            </span>
-            <Airplay size={21} />
-          </div>
-          <div className="cc-media-title">
-            <strong>{playing ? "测试播放" : "未在播放"}</strong>
-            <small>音乐</small>
-          </div>
-          <div>
-            <button aria-label="上一首">
-              <SkipForward style={{ transform: "rotate(180deg)" }} />
-            </button>
-            <button
-              aria-label={playing ? "暂停" : "播放"}
-              onClick={() => setPlaying(!playing)}
-            >
-              <Play fill="currentColor" />
-            </button>
-            <button aria-label="下一首">
-              <SkipForward />
-            </button>
-          </div>
-        </div>
-        <button
-          className={"cc-square " + (rotation ? "cc-white" : "")}
-          aria-label="旋转锁定"
-          aria-pressed={rotation}
-          onClick={() => setRotation(!rotation)}
-        >
-          <span className="cc-rotation">
-            <RotateCcw />
-            <Lock size={14} />
-          </span>
-        </button>
-        <button
-          className="cc-square"
-          onClick={() => setTool(tool ? "" : "屏幕镜像")}
-          aria-label="屏幕镜像"
-        >
-          <Monitor />
-        </button>
-        <SliderModule
-          type="brightness"
-          value={brightness}
-          onChange={setBrightness}
-        />
-        <SliderModule type="volume" value={volume} onChange={setVolume} />
-        <button
-          className={"cc-focus " + (focus ? "cc-white" : "")}
-          aria-pressed={focus}
-          onClick={() => setFocus(!focus)}
-        >
-          <Moon />
-          <span>专注模式</span>
-          <ChevronDown size={14} />
-        </button>
-        <button className="cc-home" onClick={() => setTool("家庭")}>
-          <House size={38} />
-          <span>未设置家庭</span>
-        </button>
-        {[Flashlight, Timer, Calculator, Camera].map((Icon, i) => (
+        <ConnectivityModule connectivity={connectivity} />
+        <section className="cc-music" aria-label="媒体">
           <button
-            className={"cc-square cc-tool-" + i}
-            aria-label={["手电筒", "计时器", "计算器", "相机"][i]}
-            key={i}
-            onClick={() =>
-              setTool(tool ? "" : ["手电筒", "计时器", "计算器", "相机"][i])
-            }
+            className="cc-output"
+            aria-label="媒体输出"
+            onClick={() => setTool("屏幕镜像")}
           >
-            <Icon />
+            <ControlGlyph name="output" size={21} />
           </button>
-        ))}
-        {[ScanLine, Circle, Radio].map((Icon, i) => (
+          <strong>{playing ? "测试播放" : "未在播放"}</strong>
           <button
-            key={i}
-            className={"cc-square cc-bottom-tool cc-bottom-" + i}
-            aria-label={["扫码", "屏幕录制", "声音识别"][i]}
-            onClick={() => setTool(["扫码", "屏幕录制", "声音识别"][i])}
+            className="cc-play"
+            aria-label={playing ? "暂停" : "播放"}
+            onClick={() => setPlaying(!playing)}
           >
-            <Icon />
+            <ControlGlyph name={playing ? "pause" : "play"} size={28} />
+          </button>
+        </section>
+        <div className="cc-quick">
+          <button
+            className="cc-square"
+            aria-label="旋转锁定"
+            aria-pressed={rotation}
+            onClick={() => setRotation(!rotation)}
+          >
+            <ControlGlyph name="rotation" size={34} />
+          </button>
+          <button
+            className="cc-square"
+            aria-label="屏幕镜像"
+            onClick={() => setTool("屏幕镜像")}
+          >
+            <ControlGlyph name="mirror" size={32} />
+          </button>
+          <button
+            className="cc-focus"
+            aria-pressed={focus}
+            onClick={() => setFocus(!focus)}
+          >
+            <span className="cc-focus-icon">
+              <ControlGlyph name="focus" size={24} />
+            </span>
+            <span>专注模式</span>
+          </button>
+        </div>
+        <div className="cc-levels">
+          <SliderModule
+            type="brightness"
+            value={brightness}
+            onChange={setBrightness}
+          />
+          <SliderModule type="volume" value={volume} onChange={setVolume} />
+        </div>
+        {(
+          [
+            ["flashlight", "手电筒"],
+            ["timer", "计时器"],
+            ["camera", "相机"],
+            ["scan", "扫码"],
+            ["record", "屏幕录制"],
+            ["recognition", "声音识别"],
+          ] as const
+        ).map(([icon, label], i) => (
+          <button
+            className={
+              i > 3 ? "cc-square cc-shortcut cc-extra" : "cc-square cc-shortcut"
+            }
+            key={label}
+            aria-label={label}
+            onClick={() => setTool(label)}
+          >
+            <ControlGlyph name={icon} size={32} />
           </button>
         ))}
       </div>
       {tool && (
-        <div className="cc-tool">
-          <strong>{tool}</strong>
-          {tool === "Wi-Fi" ? (
-            <>
+        <div className="cc-tool-shade">
+          <div className="cc-tool" role="dialog" aria-label={tool}>
+            <strong>{tool}</strong>
+            {tool === "Wi-Fi" ? (
+              <>
+                <p>
+                  {connectivity.wifiEnabled
+                    ? connectivity.wifiNetwork || "未连接"
+                    : "Wi-Fi 已关闭"}
+                </p>
+                <div className="cc-network-extra">
+                  <button
+                    aria-pressed={airdrop}
+                    onClick={() => setAirdrop(!airdrop)}
+                  >
+                    <Radio size={16} /> 隔空投送
+                  </button>
+                  <button
+                    aria-pressed={hotspot}
+                    onClick={() => setHotspot(!hotspot)}
+                  >
+                    <Link size={16} /> 个人热点
+                  </button>
+                </div>
+                {connectivity.wifiEnabled &&
+                  connectivity.wifiNetworks.length > 0 && (
+                    <div className="cc-wifi-list">
+                      {connectivity.wifiNetworks.map((name) => (
+                        <button
+                          key={name}
+                          aria-pressed={connectivity.wifiNetwork === name}
+                          onClick={() => connectivity.setWifiNetwork(name)}
+                        >
+                          <ControlGlyph name="wifi" size={16} /> {name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+              </>
+            ) : (
               <p>
-                {connectivity.wifiEnabled
-                  ? connectivity.wifiNetwork || "未连接"
-                  : "Wi-Fi 已关闭"}
+                {tool === "屏幕镜像"
+                  ? "正在搜索作品中的设备…"
+                  : "作品内快捷控制"}
               </p>
-              {connectivity.wifiEnabled &&
-                connectivity.wifiNetworks.length > 0 && (
-                  <div className="cc-wifi-list">
-                    {connectivity.wifiNetworks.map((name) => (
-                      <button
-                        key={name}
-                        aria-pressed={connectivity.wifiNetwork === name}
-                        onClick={() => connectivity.setWifiNetwork(name)}
-                      >
-                        <Wifi size={16} /> {name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-            </>
-          ) : (
-            <p>
-              {tool === "屏幕镜像" ? "正在搜索作品中的设备…" : "作品内快捷控制"}
-            </p>
-          )}
-          <button onClick={() => setTool("")}>完成</button>
+            )}
+            <button className="cc-tool-done" onClick={() => setTool("")}>
+              完成
+            </button>
+          </div>
         </div>
       )}
-      <button className="cc-dismiss" onClick={close}>
-        轻扫以关闭
-        <ChevronUp size={16} />
-      </button>
     </motion.div>
   );
 }
