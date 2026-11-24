@@ -1114,27 +1114,82 @@
   padding: 0;
   filter: drop-shadow(0 2px 2px #0002);
 }
-.map-pin[data-current] {
-  display: grid;
-  place-items: center;
+.native-maps .map-pin {
   width: 32px;
   height: 32px;
   border: 2px solid #fff;
   border-radius: 50%;
-  background: #fff;
-  color: #007aff;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #a24535;
+  box-shadow: 0 2px 5px #584b3b44;
+  filter: none;
+}
+.native-maps .map-pin[data-current] {
+  background: #1762b1;
   z-index: 1;
 }
-.map-pin[data-current] > span {
+.native-maps .map-pin:focus-visible {
+  outline: 2px solid #233b58;
+  outline-offset: 3px;
+  z-index: 2;
+}
+.native-maps .map-pin > svg {
+  width: 18px;
+  height: 18px;
+}
+.map-pin-label {
   position: absolute;
-  top: calc(100% + 4px);
-  padding: 2px 6px;
-  border-radius: 5px;
-  background: #fff;
-  color: #233b58;
+  top: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid #e4dfd4;
+  border-radius: 6px;
+  background: #fffef9;
+  box-shadow: 0 1px 3px #39342820;
+  color: #443329;
+  padding: 3px 6px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 650;
+  max-width: 155px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-label-align="start"] > .map-pin-label {
+  left: 0;
+  transform: none;
+}
+[data-label-align="end"] > .map-pin-label {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+.map-pin[data-current] > .map-pin-label {
+  background: #edf6ff;
+  border-color: #c8def3;
+  color: #164f88;
+}
+.map-street-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+  color: #655a44;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 3px #fff;
   font-size: 10px;
   font-weight: 600;
-  white-space: nowrap;
+}
+.map-street-label[data-tone="water"] {
+  color: #37677d;
+  transform: translate(-50%, -50%) rotate(49deg);
+}
+.map-street-label[data-tone="park"] {
+  color: #49684b;
 }
 .map-pin .catalog-avatar {
   width: 32px;
@@ -1147,10 +1202,10 @@
   border-radius: 17px 17px 0 0;
   background: #f8f8fa;
   box-shadow: 0 -3px 10px #0001;
-  margin-top: -18px;
+  margin-top: -12px;
   position: relative;
   z-index: 1;
-  max-height: 230px;
+  max-height: min(230px, 42%);
   display: flex;
   flex-direction: column;
 }

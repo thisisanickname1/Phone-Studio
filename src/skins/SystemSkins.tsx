@@ -29,6 +29,7 @@ import {
 import { useEffect, useState } from "react";
 import { download } from "../io";
 import { itemSchema, safeMedia, type Item } from "../schema";
+import { SchoolNeighborhood } from "./SchoolNeighborhood";
 import {
   Add,
   Avatar,
@@ -872,47 +873,72 @@ export function MusicSkin(p: Props) {
     </div>
   );
 }
+function mapCoordinate(
+  value: string,
+  fallback: number,
+  min: number,
+  max: number,
+) {
+  const coordinate = value.trim() ? Number(value) : fallback;
+  return Math.max(
+    min,
+    Math.min(max, Number.isFinite(coordinate) ? coordinate : fallback),
+  );
+}
+
 function LocationMap({
   items,
   onItem,
   find = false,
+  schoolNeighborhood = false,
 }: {
   items: Item[];
   onItem: (i: Item) => void;
   find?: boolean;
+  schoolNeighborhood?: boolean;
 }) {
   return (
-    <div className={`fiction-map ${find ? "find-map" : ""}`}>
-      <svg viewBox="0 0 300 300" aria-label="原创虚构地图">
-        <rect width="300" height="300" fill="#e4e5d8" />
-        {[35, 100, 190, 260].map((n) => (
+    <div
+      className={`fiction-map ${find ? "find-map" : ""}`}
+      role="group"
+      aria-label={schoolNeighborhood ? "S城一高周边地图" : "原创虚构地图"}
+    >
+      {schoolNeighborhood ? (
+        <SchoolNeighborhood />
+      ) : (
+        <svg viewBox="0 0 300 300" aria-hidden="true">
+          <rect width="300" height="300" fill="#e4e5d8" />
+          {[35, 100, 190, 260].map((n) => (
+            <path
+              key={n}
+              d={`M0 ${n} H300 M${n} 0 V300`}
+              stroke="#fff"
+              strokeWidth="11"
+            />
+          ))}
           <path
-            key={n}
-            d={`M0 ${n} H300 M${n} 0 V300`}
-            stroke="#fff"
-            strokeWidth="11"
+            d="M20 0 Q190 110 120 300"
+            stroke="#b6d8df"
+            strokeWidth="24"
+            fill="none"
           />
-        ))}
-        <path
-          d="M20 0 Q190 110 120 300"
-          stroke="#b6d8df"
-          strokeWidth="24"
-          fill="none"
-        />
-        <rect x="205" y="112" width="42" height="65" rx="7" fill="#bdcfac" />
-      </svg>
+          <rect x="205" y="112" width="42" height="65" rx="7" fill="#bdcfac" />
+        </svg>
+      )}
       {items.map((i, n) => {
         const current = !find && i.folder === "我的位置";
+        const left = mapCoordinate(meta(i, "x"), 20 + ((n * 17) % 65), 5, 90);
+        const top = mapCoordinate(meta(i, "y"), 25 + ((n * 13) % 50), 8, 80);
         return (
           <button
             key={i.id}
             aria-label={current ? `我的位置 ${i.title}` : `地图位置${i.title}`}
             className="map-pin"
             data-current={current || undefined}
-            style={{
-              left: `${Math.max(5, Math.min(90, Number(meta(i, "x", String(20 + ((n * 17) % 65))))))}%`,
-              top: `${Math.max(8, Math.min(80, Number(meta(i, "y", String(25 + ((n * 13) % 50))))))}%`,
-            }}
+            data-label-align={
+              left < 23 ? "start" : left > 77 ? "end" : undefined
+            }
+            style={{ left: `${left}%`, top: `${top}%` }}
             onClick={() => onItem(i)}
           >
             {find ? (
@@ -922,7 +948,7 @@ function LocationMap({
             ) : (
               <MapPin size={24} />
             )}
-            {current && <span>我的位置</span>}
+            {!find && <span className="map-pin-label">{i.title}</span>}
           </button>
         );
       })}
@@ -931,10 +957,15 @@ function LocationMap({
 }
 export function MapsSkin(p: Props) {
   const { q, setQ, items } = useContent(p, "地点");
+  const schoolNeighborhood = p.items.some((i) => i.id === "maps-s-city-high");
   return (
     <div className="catalog-skin native-maps">
       <Header p={p} />
-      <LocationMap items={items} onItem={p.onItem} />
+      <LocationMap
+        items={items}
+        onItem={p.onItem}
+        schoolNeighborhood={schoolNeighborhood}
+      />
       <div className="map-sheet">
         <SearchBox value={q} set={setQ} placeholder="搜索地点" />
         <div className="map-places">
