@@ -432,7 +432,6 @@ function PhoneRuntime({
               aria-label="通知中心"
             >
               {displayTime}
-              <StatusGlyph kind="silent" />
             </button>
             <div className="dynamic-island" />
             <button
