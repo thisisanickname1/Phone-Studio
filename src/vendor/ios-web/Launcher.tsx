@@ -12,12 +12,14 @@ export type LauncherOrigin = {
   y: number;
   width: number;
   height: number;
+  screenHeight: number;
 };
 export const screenOrigin: LauncherOrigin = {
   x: 0,
   y: 0,
   width: DEVICE_WIDTH,
   height: DEVICE_HEIGHT,
+  screenHeight: DEVICE_HEIGHT,
 };
 export function readLauncherOrigin(
   launcher: HTMLElement,
@@ -32,6 +34,7 @@ export function readLauncherOrigin(
     y: (a.y - b.y) / scale,
     width: a.width / scale,
     height: a.height / scale,
+    screenHeight: b.height / scale,
   };
 }
 export function launcherPose(origin: LauncherOrigin) {
@@ -39,7 +42,7 @@ export function launcherPose(origin: LauncherOrigin) {
     x: origin.x,
     y: origin.y,
     scaleX: origin.width / DEVICE_WIDTH,
-    scaleY: origin.height / DEVICE_HEIGHT,
+    scaleY: origin.height / origin.screenHeight,
     borderRadius: 90,
     opacity: 0.3,
   };

@@ -194,7 +194,7 @@ export function Add({ p, label = "添加内容" }: { p: Props; label?: string })
     </button>
   ) : null;
 }
-export function useContent(p: Props, first: string) {
+export function useContent(p: Pick<Props, "items">, first: string) {
   const [tab, setTab] = useState(first),
     [q, setQ] = useState("");
   const items = p.items.filter((i) =>

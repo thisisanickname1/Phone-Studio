@@ -77,7 +77,11 @@ export function WeatherMap({ item }: { item?: Item }) {
           </button>
         ))}
       </div>
-      <div className="weather-map-stage" role="group" aria-label="郑州周边地图">
+      <div
+        className="weather-map-stage"
+        role="group"
+        aria-label={`${item.title}周边地图`}
+      >
         <img src={terrain} alt="" />
         <span className="weather-map-river" aria-hidden="true">
           黄河

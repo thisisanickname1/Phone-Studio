@@ -80,7 +80,7 @@ test("published full test preview has four dock apps and the updated status bar"
   expect(errors).toEqual([]);
 });
 
-test("story contacts have matching initials and removed apps stay out of old layouts", async ({
+test("story contacts match in both apps and removed apps stay out of old layouts", async ({
   page,
   request,
 }) => {
@@ -174,5 +174,68 @@ test("story contacts have matching initials and removed apps stay out of old lay
     );
     await expect(detail.getByText("+34 790 010 " + number)).toBeVisible();
     await detail.getByRole("button", { name: "返回", exact: true }).click();
+  }
+
+  const names = await list.locator(".catalog-row strong").allTextContents();
+  await page.getByRole("button", { name: "返回桌面", exact: true }).click();
+  await page.getByRole("button", { name: "打开电话", exact: true }).click();
+  const phone = page.locator(".native-phone");
+  await expect(phone.getByRole("heading", { name: "最近通话" })).toBeVisible();
+  await phone.getByRole("button", { name: "通讯录", exact: true }).click();
+  await expect(phone.locator(".catalog-row strong")).toHaveText(names);
+  await expect(phone.locator(".contact-self strong")).toHaveText(
+    "Hamza Abdelkarim",
+  );
+  await phone.getByRole("textbox", { name: "搜索" }).fill("790 010 005");
+  await expect(phone.locator(".catalog-row strong")).toHaveText(["Pedri"]);
+  await phone.getByRole("button", { name: /Pedri/ }).click();
+  await expect(detail.locator(".contact-initials")).toHaveText("P");
+  await expect(detail.getByText("+34 790 010 005")).toBeVisible();
+  await detail.getByRole("button", { name: "返回", exact: true }).click();
+  await phone.getByRole("button", { name: "最近通话", exact: true }).click();
+  await expect(phone.getByRole("heading", { name: "最近通话" })).toBeVisible();
+});
+
+test("world clock uses the story's Beijing time and each city's seasonal offset", async ({
+  page,
+  request,
+}) => {
+  const work = await (await request.get("/work.json")).json();
+  for (const [date, times] of [
+    ["2026-12-25", ["09:41", "02:41", "03:41"]],
+    ["2026-07-01", ["09:41", "03:41", "04:41"]],
+  ] as const) {
+    await page.route(
+      "**/work.json",
+      (route) =>
+        route.fulfill({
+          json: {
+            ...work,
+            id: work.id + date,
+            phone: { ...work.phone, date, time: "09:41" },
+          },
+        }),
+      { times: 1 },
+    );
+    await page.goto("/");
+    await page.getByRole("button", { name: "轻触解锁" }).click();
+    for (const digit of work.phone.passcode)
+      await page
+        .getByRole("button", { name: "密码键" + digit, exact: true })
+        .click();
+    await page.getByRole("button", { name: "打开时钟", exact: true }).click();
+    const clock = page.locator(".native-clock");
+    await expect(
+      clock.getByRole("heading", { name: "世界时钟" }),
+    ).toBeVisible();
+    await expect(clock.locator(".alarm-row small")).toHaveText([
+      "S城",
+      "巴塞罗那",
+      "开罗",
+    ]);
+    await expect(clock.locator(".alarm-row time")).toHaveText([...times]);
+    await clock.getByRole("button", { name: "闹钟", exact: true }).click();
+    await expect(clock.getByText("暂无闹钟")).toBeVisible();
+    await expect(clock.getByRole("switch")).toHaveCount(0);
   }
 });

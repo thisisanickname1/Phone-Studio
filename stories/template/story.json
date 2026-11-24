@@ -575,12 +575,31 @@
     ],
     "clock": [
       {
-        "id": "test-item-clock",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
+        "id": "world-clock-s-city",
+        "title": "S城",
+        "body": "北京时间（UTC+8）",
+        "folder": "世界时钟",
+        "meta": {
+          "timeZone": "Asia/Shanghai"
+        }
+      },
+      {
+        "id": "world-clock-barcelona",
+        "title": "巴塞罗那",
+        "body": "西班牙巴塞罗那当地时间",
+        "folder": "世界时钟",
+        "meta": {
+          "timeZone": "Europe/Madrid"
+        }
+      },
+      {
+        "id": "world-clock-cairo",
+        "title": "开罗",
+        "body": "埃及开罗当地时间",
+        "folder": "世界时钟",
+        "meta": {
+          "timeZone": "Africa/Cairo"
+        }
       }
     ],
     "reminders": [
@@ -625,23 +644,52 @@
     ],
     "maps": [
       {
-        "id": "test-item-maps",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
+        "id": "maps-s-city-high",
+        "title": "S城一高",
+        "body": "闹麻中学地图研发部",
+        "folder": "我的位置",
+        "meta": {
+          "x": "54",
+          "y": "52"
+        }
+      },
+      {
+        "id": "maps-naomama-shop",
+        "title": "闹麻麻小卖部",
+        "body": "S城一高附近的小卖部",
+        "meta": {
+          "x": "32",
+          "y": "43"
+        }
+      },
+      {
+        "id": "maps-liehuo-noodles",
+        "title": "烈火热干面酸辣粉",
+        "body": "S城一高东边的小吃店",
+        "meta": {
+          "x": "65",
+          "y": "43"
+        }
+      },
+      {
+        "id": "maps-granny-skewers",
+        "title": "老奶奶炸串",
+        "body": "S城一高南边的炸串摊",
+        "meta": {
+          "x": "59",
+          "y": "67"
+        }
       }
     ],
     "weather": [
       {
         "id": "test-item-weather",
-        "title": "郑州",
+        "title": "S城",
         "body": "今天晴，早晚气温低于冰点，午后回升到 7°C。北风偏干。",
         "time": "2026-12-25 09:41",
         "kind": "text",
         "meta": {
-          "locationLabel": "河南 · 我的位置",
+          "locationLabel": "我的位置",
           "temperature": "2",
           "condition": "晴",
           "high": "7",

@@ -16,6 +16,7 @@ const fields: Record<string, Field[]> = {
   clock: [
     { key: "city", label: "城市" },
     { key: "clock", label: "显示时间" },
+    { key: "timeZone", label: "时区" },
   ],
   maps: [
     { key: "address", label: "地址" },

@@ -147,17 +147,49 @@ for (const [choice, ending] of [
       await expect(page.getByText(ending, { exact: true })).toBeVisible();
     },
   );
-test("mobile viewport, no overflow", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test("portrait player fills the mobile viewport, including after resizing", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 667 });
   await page.goto("/");
   await page.getByRole("button", { name: "轻触解锁" }).click();
   await expect(
     page.getByRole("button", { name: "打开设置", exact: true }),
   ).toBeVisible();
-  const rect = await page.locator(".phone-shell").boundingBox();
-  expect(rect!.width).toBeLessThanOrEqual(390);
-  expect(rect!.height).toBeLessThanOrEqual(844);
+  const screen = page.locator(".phone-screen");
+  const shell = page.locator(".phone-shell");
+  for (const [width, height] of [
+    [375, 667],
+    [390, 844],
+    [430, 932],
+  ]) {
+    await page.setViewportSize({ width, height });
+    await expect(shell).toHaveAttribute("data-immersive", "true");
+    await expect
+      .poll(async () => {
+        const rect = (await screen.boundingBox())!;
+        return Math.max(
+          Math.abs(rect.x),
+          Math.abs(rect.y),
+          Math.abs(rect.width - width),
+          Math.abs(rect.height - height),
+        );
+      })
+      .toBeLessThan(1);
+  }
+  await page.setViewportSize({ width: 375, height: 667 });
+  await open(page, "设置");
+  await page.mouse.move(185, 655);
+  await page.mouse.down();
+  await page.mouse.move(185, 520, { steps: 8 });
+  await page.mouse.up();
+  await expect(
+    page.getByRole("button", { name: "打开设置", exact: true }),
+  ).toBeVisible();
   await page.screenshot({ path: "outputs/v0.6/mobile.png" });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(shell).not.toHaveAttribute("data-immersive", "true");
+  expect((await shell.boundingBox())!.height).toBeLessThan(390);
 });
 test("production PWA cached story works after offline reload", async ({
   browser,

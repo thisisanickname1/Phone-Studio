@@ -1,12 +1,18 @@
 .story-runtime {
-  height: 100dvh;
-  min-height: 320px;
+  --player-height: 100vh;
   width: 100%;
+  height: var(--player-height);
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: #111113;
+}
+@supports (height: 100dvh) {
+  .story-runtime {
+    --player-height: 100dvh;
+  }
 }
 .story-runtime .phone-stage {
   width: 100%;
@@ -16,8 +22,99 @@
 .story-runtime .phone-shell {
   margin: auto;
 }
-@media (max-width: 430px) {
-  .story-runtime {
-    background: #000;
-  }
+.story-runtime .phone-shell.ios18[data-immersive] {
+  --ios-height: calc(var(--player-height) / var(--phone-scale));
+  --screen-safe-top: calc(env(safe-area-inset-top, 0px) / var(--phone-scale));
+  --screen-safe-bottom: calc(
+    env(safe-area-inset-bottom, 0px) / var(--phone-scale)
+  );
+  --ios-safe-top: max(59px, calc(var(--screen-safe-top) + 32px));
+  --ios-safe-bottom: max(34px, calc(var(--screen-safe-bottom) + 14px));
+  --extra-safe-top: calc(var(--ios-safe-top) - 59px);
+  --extra-safe-bottom: calc(var(--ios-safe-bottom) - 34px);
+  --home-icon-size: clamp(
+    36px,
+    calc(
+      (
+          var(--ios-height) - var(--ios-safe-top) - var(--ios-safe-bottom) -
+            163px
+        ) /
+        6 - 18px
+    ),
+    62px
+  );
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.story-runtime .phone-shell[data-immersive]::before,
+.story-runtime .phone-shell[data-immersive]::after,
+.story-runtime [data-immersive] .hardware-reflection,
+.story-runtime [data-immersive] .dynamic-island {
+  display: none;
+}
+.story-runtime [data-immersive] .phone-screen {
+  border-radius: 0;
+}
+.story-runtime [data-immersive] .status-bar {
+  padding-top: var(--screen-safe-top);
+}
+.story-runtime [data-immersive] .phone-screen > .app-screen {
+  padding-top: var(--ios-safe-top);
+  padding-bottom: var(--ios-safe-bottom);
+}
+.story-runtime [data-immersive] .phone-screen > .home-indicator {
+  height: var(--ios-safe-bottom);
+  padding-bottom: calc(8px + var(--extra-safe-bottom));
+}
+.story-runtime
+  [data-immersive]
+  .interactive-home:not(.home-editing)
+  .home-pages {
+  top: calc(82px + var(--extra-safe-top));
+}
+.story-runtime [data-immersive] .interactive-home.home-editing .home-pages {
+  top: calc(92px + var(--extra-safe-top));
+}
+.story-runtime [data-immersive] .interactive-home .home-pages {
+  bottom: calc(164px + var(--extra-safe-bottom));
+}
+.story-runtime [data-immersive] .interactive-home .home-app-grid {
+  height: min(100%, 594px);
+  min-height: 0;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+}
+.story-runtime [data-immersive] .home-app-grid :is(.app-icon, .folder-icon) {
+  width: var(--home-icon-size);
+  height: var(--home-icon-size);
+}
+.story-runtime [data-immersive] .interactive-home .launcher-toolbar,
+.story-runtime [data-immersive] .launcher-sheet {
+  top: var(--ios-safe-top);
+}
+.story-runtime [data-immersive] .interactive-home [data-drop-zone="dock"] {
+  bottom: calc(14px + var(--extra-safe-bottom));
+}
+.story-runtime [data-immersive] .launcher-bottom-tools {
+  bottom: calc(115px + var(--extra-safe-bottom));
+}
+.story-runtime [data-immersive] .lock-clock-block {
+  top: calc(78px + var(--extra-safe-top));
+}
+.story-runtime [data-immersive] .wallpaper-custom .lock-clock-block {
+  top: calc(48px + var(--extra-safe-top));
+}
+.story-runtime [data-immersive] .lock-tools {
+  bottom: calc(46px + var(--extra-safe-bottom));
+}
+.story-runtime [data-immersive] .swipe-unlock {
+  bottom: calc(42px + var(--extra-safe-bottom));
+}
+.story-runtime [data-immersive] .device-passcode {
+  padding-top: calc(106px + var(--extra-safe-top));
+}
+.story-runtime [data-immersive] .pin-footer {
+  bottom: calc(48px + var(--extra-safe-bottom));
 }

@@ -1,3 +1,4 @@
+import { DEVICE_WIDTH, DEVICE_HEIGHT } from "./deviceMetrics";
 import { StatusGlyph } from "./ios/StatusGlyph";
 import { SocialDetail, socialDetailApps } from "./skins/SocialDetails";
 import { NativeCalculator } from "./ios/Calculator";
@@ -115,6 +116,7 @@ function PhoneRuntime({
   deviceLayout,
   work,
   creator = false,
+  fillMobileViewport = false,
   onEdit,
   onAdd,
   onSettings,
@@ -125,6 +127,7 @@ function PhoneRuntime({
   deviceLayout: ReturnType<typeof useDeviceLayout>;
   work: Work;
   creator?: boolean;
+  fillMobileViewport?: boolean;
   onEdit?: (app: string, item: Item) => void;
   onAdd?: (app: string) => void;
   onSettings?: () => void;
@@ -143,7 +146,10 @@ function PhoneRuntime({
   const [banner, setBanner] = useState("");
   const noticesSeen = useRef(0);
   const [contextApp, setContextApp] = useState("");
-  const [deviceScale, setDeviceScale] = useState(0.84);
+  const [{ scale: deviceScale, immersive }, setDeviceFit] = useState({
+    scale: 0.84,
+    immersive: false,
+  });
   const shell = useRef<HTMLDivElement>(null);
   const gesture = useRef({ x: 0, y: 0, time: 0, zone: "" });
   const [launchOrigin, setLaunchOrigin] = useState(screenOrigin);
@@ -164,30 +170,42 @@ function PhoneRuntime({
   const [own, setOwn] = useState(() => initialRuntime(work));
   const [ready, setReady] = useState(creator || !!external);
   const [loadError, setLoadError] = useState("");
+  const embedded = !!external;
   useEffect(() => {
-    const el = shell.current;
-    if (!el) return;
+    const parent = shell.current?.parentElement;
+    if (!parent) return;
+    const mobile = window.matchMedia(
+      "(max-width: 600px) and (orientation: portrait)",
+    );
     const fit = () => {
-      setDeviceScale(
-        Math.max(
-          0.4,
-          Math.min(
-            1,
-            (el.parentElement!.clientWidth - 24) / 407,
-            (window.innerHeight - (creator ? 170 : external ? 150 : 40)) / 866,
-          ),
-        ),
-      );
+      const immersive = fillMobileViewport && mobile.matches;
+      const scale = immersive
+        ? parent.clientWidth / DEVICE_WIDTH
+        : Math.max(
+            fillMobileViewport ? 0.25 : 0.4,
+            Math.min(
+              1,
+              (parent.clientWidth - 24) / (DEVICE_WIDTH + 14),
+              (window.innerHeight - (creator ? 170 : embedded ? 150 : 40)) /
+                (DEVICE_HEIGHT + 14),
+            ),
+          );
+      if (scale > 0)
+        setDeviceFit((current) =>
+          current.scale === scale && current.immersive === immersive
+            ? current
+            : { scale, immersive },
+        );
     };
     const observer = new ResizeObserver(fit);
-    observer.observe(el.parentElement!);
+    observer.observe(parent);
     window.addEventListener("resize", fit);
     fit();
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, [creator, ready]);
+  }, [creator, embedded, fillMobileViewport, ready]);
   const s = external ?? own;
   const runtimeRef = useRef(s);
   runtimeRef.current = s;
@@ -314,6 +332,7 @@ function PhoneRuntime({
     <div
       ref={shell}
       style={{ "--phone-scale": deviceScale } as CSSProperties}
+      data-immersive={immersive || undefined}
       className={`phone-shell ios18 ${work.phone.theme === "dark" ? "dark-phone" : ""}`}
     >
       <KeyboardContext.Provider value={setKeyboard}>
@@ -332,14 +351,27 @@ function PhoneRuntime({
                 setContextApp(button.dataset.appId || "");
               }, 550);
             }
-            const box = e.currentTarget.getBoundingClientRect(),
-              x = (e.clientX - box.left) / deviceScale,
-              y = (e.clientY - box.top) / deviceScale;
+            const screen = e.currentTarget;
+            const box = screen.getBoundingClientRect();
+            const top = screen
+              .querySelector(".status-bar")!
+              .getBoundingClientRect().bottom;
+            const home = screen
+              .querySelector(".home-indicator")!
+              .getBoundingClientRect();
+            const bottom = Math.min(home.top, box.bottom - 34 * deviceScale);
             gesture.current = {
-              x,
-              y,
+              x: (e.clientX - box.left) / deviceScale,
+              y: (e.clientY - box.top) / deviceScale,
               time: Date.now(),
-              zone: y < 58 ? "top" : y > 818 ? "bottom" : locked ? "lock" : "",
+              zone:
+                e.clientY < top
+                  ? "top"
+                  : e.clientY > bottom
+                    ? "bottom"
+                    : locked
+                      ? "lock"
+                      : "",
             };
           }}
           onPointerMove={(e) => {
@@ -453,8 +485,8 @@ function PhoneRuntime({
                   creator={creator}
                   state={s}
                   onRead={(id) => event("read", id)}
-                  onEdit={(item) => onEdit?.(app, item)}
-                  onAdd={() => onAdd?.(app)}
+                  onEdit={(item, appId = app) => onEdit?.(appId, item)}
+                  onAdd={(appId = app) => onAdd?.(appId)}
                   onBack={() => setApp("")}
                   onSettings={onSettings}
                   onUi={(key, value) => {
@@ -874,14 +906,19 @@ function AppContent({
   creator: boolean;
   state: Runtime;
   onRead: (id: string) => void;
-  onEdit: (item: Item) => void;
-  onAdd: () => void;
+  onEdit: (item: Item, appId?: string) => void;
+  onAdd: (appId?: string) => void;
   onBack: () => void;
   onSettings?: () => void;
   onUi?: (key: string, value: UiValue) => void;
   work: Work;
 }) {
-  const [detail, setDetail] = useState<Item | null>(null);
+  const [selection, setSelection] = useState<{
+    item: Item;
+    appId: string;
+  } | null>(null);
+  const detail = selection?.item;
+  const detailApp = selection?.appId ?? app.id;
   const [thread, setThread] = useState("");
   const [tab, setTab] = useState(app.tabs[0]);
   const [q, setQ] = useState("");
@@ -900,17 +937,29 @@ function AppContent({
       : tab === app.tabs[0]
         ? shown
         : shown.filter((i) => i.folder === tab);
-  const read = (i: Item) => {
+  const add = () => onAdd();
+  const read = (i: Item, appId = app.id) => {
     if (creator) {
-      onEdit(i);
+      onEdit(i, appId);
       return;
     }
-    setDetail(i);
+    setSelection({ item: i, appId });
     if (!i.password || unlocks.includes(i.id)) onRead(i.id);
   };
+  const contacts =
+    app.id === "phone"
+      ? {
+          items: [
+            ...(work.data.contacts ?? []),
+            ...(state.messages.contacts ?? []),
+          ].filter((item) => creator || visible(item, state)),
+          onItem: (item: Item) => read(item, "contacts"),
+          onAdd: () => onAdd("contacts"),
+        }
+      : undefined;
   const chats = [...new Set(shown.map((i) => i.title))];
   const back = () => {
-    if (detail) setDetail(null);
+    if (detail) setSelection(null);
     else if (thread) setThread("");
     else onBack();
   };
@@ -961,7 +1010,7 @@ function AppContent({
             fallback={detail.body || (songDetail ? "暂无歌词" : "")}
           />
           <dl className="item-metadata">
-            {getFields(app.id)
+            {getFields(detailApp)
               .filter((f) => detail.meta?.[f.key])
               .map((f) => (
                 <div key={f.key}>
@@ -993,15 +1042,17 @@ function AppContent({
             <Skin
               appId={app.id}
               owner={work.phone.owner}
-              virtualTime={state.time}
+              virtualTime={state.time || work.phone.time}
+              virtualDate={state.date ?? work.phone.date}
               ui={state.ui?.[app.id]}
               onUi={creator ? undefined : onUi}
               name={name}
               items={shown}
+              contacts={contacts}
               creator={creator}
               onRead={onRead}
               onItem={read}
-              onAdd={onAdd}
+              onAdd={add}
               onBack={onBack}
               thread={thread}
               onThread={setThread}
@@ -1019,9 +1070,9 @@ function AppContent({
               ui={state.ui?.[app.id]}
               onUi={onUi}
             />
-          ) : nativeDetailApps.has(app.id) &&
+          ) : nativeDetailApps.has(detailApp) &&
             (!detail.password || unlocks.includes(detail.id)) ? (
-            <NativeDetail app={app.id} item={detail} back={back} />
+            <NativeDetail app={detailApp} item={detail} back={back} />
           ) : (
             <>
               <div className="app-nav">
@@ -1047,7 +1098,7 @@ function AppContent({
         <button
           onClick={
             creator
-              ? onAdd
+              ? add
               : () =>
                   document
                     .querySelector<HTMLInputElement>(
@@ -1112,7 +1163,7 @@ function AppContent({
               </button>
             ))}
           {creator ? (
-            <button className="chat-compose" onClick={onAdd}>
+            <button className="chat-compose" onClick={add}>
               ＋ 添加一条消息
             </button>
           ) : (
@@ -1264,7 +1315,7 @@ function AppContent({
             </div>
           )}
           {creator && (
-            <button className="phone-add" onClick={onAdd}>
+            <button className="phone-add" onClick={add}>
               <Plus size={15} />
               添加
               {app.engine === "messaging"

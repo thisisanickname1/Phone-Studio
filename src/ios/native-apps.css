@@ -492,8 +492,23 @@
 .ios18 .skin-weather {
   background: #151c34;
 }
+.ios18 .phone-screen:has(.calibrated-weather) {
+  --weather-top: #080c24;
+  --weather-bottom: #303f60;
+}
+.ios18 .phone-screen:has(.weather-native-sheet) {
+  --weather-top: #18223a;
+  --weather-bottom: #18223a;
+}
+.ios18 .phone-screen:has(.weather-map-sheet) {
+  --weather-top: #111d2c;
+  --weather-bottom: #111d2c;
+}
+.ios18 .app-screen:has(.calibrated-weather) {
+  background: linear-gradient(var(--weather-top) var(--ios-safe-top), var(--weather-bottom));
+}
 .ios18 .calibrated-weather {
-  background: linear-gradient(#080c24, #303f60);
+  background: transparent;
   position: relative;
   isolation: isolate;
   color: #fff;
@@ -701,7 +716,7 @@
 }
 .ios18 .weather-native-toolbar {
   position: absolute;
-  bottom: -15px;
+  bottom: 0;
   left: 26px;
   right: 26px;
   display: flex;
@@ -751,8 +766,7 @@
 .ios18 .weather-native-sheet {
   position: absolute;
   inset: 0;
-  background: #16213bef;
-  backdrop-filter: blur(24px);
+  background: var(--weather-top);
   padding: 0 16px 50px;
   overflow: auto;
   z-index: 10;
@@ -807,14 +821,13 @@
   padding: 25px;
   font-size: 22px;
 }
-.ios18 .app-screen:has(.weather-map-sheet),
 .ios18 .weather-native-sheet.weather-map-sheet {
-  background: #111d2c;
+  padding-inline: 14px;
 }
-.ios18 .calibrated-weather:has(.weather-map-sheet) .weather-native-toolbar {
+.ios18 .calibrated-weather:has(.weather-native-sheet) .weather-native-toolbar {
   visibility: hidden;
 }
-.ios18 .phone-screen:has(.weather-map-sheet) .home-indicator:after {
+.ios18 .phone-screen:has(.calibrated-weather) .home-indicator:after {
   background: #fff;
 }
 .weather-region {
@@ -995,12 +1008,8 @@
   align-items: flex-end;
   text-align: left;
 }
-.ios18 .phone-screen:has(.calibrated-weather) .status-bar {
-  background: #080c24;
-  color: white;
-}
 .phone-shell.ios18 .phone-screen:has(.calibrated-weather) .status-bar {
-  background: #080c24;
+  background: var(--weather-top);
   color: #fff;
 }
 .phone-shell.ios18

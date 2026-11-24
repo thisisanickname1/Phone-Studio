@@ -39,8 +39,10 @@ export type SkinProps = {
   appId?: string;
   owner?: string;
   virtualTime?: string;
+  virtualDate?: string;
   name: string;
   items: Item[];
+  contacts?: Pick<SkinProps, "items" | "onItem" | "onAdd">;
   creator: boolean;
   onRead: (id: string) => void;
   onItem: (i: Item) => void;

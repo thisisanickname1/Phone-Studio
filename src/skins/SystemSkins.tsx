@@ -16,6 +16,7 @@ import {
   Heart,
   Image,
   LockKeyhole,
+  LocateFixed,
   MapPin,
   Music,
   Phone,
@@ -48,12 +49,21 @@ export function PhoneSkin(p: Props) {
   const [digits, setDigits] = useState(""),
     [call, setCall] = useState("");
   const list = tab === "收藏" ? items.filter((i) => i.favorite) : items;
+  const contacts = p.contacts ?? {
+    items: [],
+    onItem: p.onItem,
+    onAdd: p.onAdd,
+  };
   return (
-    <div className="catalog-skin native-phone">
+    <div
+      className={`catalog-skin native-phone${tab === "通讯录" ? " native-contacts" : ""}`}
+    >
       <Header p={p} />
       <div className="catalog-scroll">
         <h1>{tab}</h1>
-        {tab === "拨号键盘" ? (
+        {tab === "通讯录" ? (
+          <ContactList {...contacts} owner={p.owner} creator={p.creator} />
+        ) : tab === "拨号键盘" ? (
           <div className="dialer">
             <output>{digits || "输入号码"}</output>
             <div>
@@ -142,61 +152,70 @@ export function PhoneSkin(p: Props) {
   );
 }
 export function ContactsSkin(p: Props) {
-  const { q, setQ, items: results } = useContent(p, "所有联系人");
-  const ownerCard = p.items.find((item) => item.id === "owner-card");
-  const ownerName = ownerCard?.title || p.owner || "我的名片";
-  const items = results.filter((item) => item !== ownerCard);
   return (
     <div className="catalog-skin native-contacts">
       <Header p={p} />
       <div className="catalog-scroll">
         <h1>通讯录</h1>
-        <SearchBox value={q} set={setQ} />
-        <button
-          className="contact-self"
-          onClick={() => {
-            if (ownerCard) {
-              p.onItem(ownerCard);
-            } else if (p.creator) {
-              p.onAdd();
-            } else {
-              p.onItem(
-                itemSchema.parse({
-                  id: "owner-card",
-                  title: ownerName,
-                  body: "",
-                  sender: ownerName,
-                  time: "",
-                }),
-              );
-            }
-          }}
-        >
-          <ContactAvatar name={ownerName} />
-          <span>
-            <strong>{ownerName}</strong>
-            <small>我的名片</small>
-          </span>
-        </button>
-        {groupItems(items, "所有联系人").map((g) => (
-          <section key={g}>
-            <h4 className="native-section">{g}</h4>
-            {items
-              .filter((i) => (i.folder || "所有联系人") === g)
-              .sort((a, b) => a.title.localeCompare(b.title, "zh-CN"))
-              .map((i) => (
-                <Row
-                  key={i.id}
-                  item={i}
-                  onItem={p.onItem}
-                  leading={<ContactAvatar name={i.title} />}
-                />
-              ))}
-          </section>
-        ))}
-        <Empty items={items} />
+        <ContactList {...p} />
       </div>
     </div>
+  );
+}
+function ContactList(
+  p: Pick<Props, "items" | "owner" | "creator" | "onItem" | "onAdd">,
+) {
+  const { q, setQ, items: results } = useContent(p, "所有联系人");
+  const ownerCard = p.items.find((item) => item.id === "owner-card");
+  const ownerName = ownerCard?.title || p.owner || "我的名片";
+  const items = results.filter((item) => item !== ownerCard);
+  return (
+    <>
+      <SearchBox value={q} set={setQ} />
+      <button
+        className="contact-self"
+        onClick={() => {
+          if (ownerCard) {
+            p.onItem(ownerCard);
+          } else if (p.creator) {
+            p.onAdd();
+          } else {
+            p.onItem(
+              itemSchema.parse({
+                id: "owner-card",
+                title: ownerName,
+                body: "",
+                sender: ownerName,
+                time: "",
+              }),
+            );
+          }
+        }}
+      >
+        <ContactAvatar name={ownerName} />
+        <span>
+          <strong>{ownerName}</strong>
+          <small>我的名片</small>
+        </span>
+      </button>
+      {groupItems(items, "所有联系人").map((g) => (
+        <section key={g}>
+          <h4 className="native-section">{g}</h4>
+          {items
+            .filter((i) => (i.folder || "所有联系人") === g)
+            .sort((a, b) => a.title.localeCompare(b.title, "zh-CN"))
+            .map((i) => (
+              <Row
+                key={i.id}
+                item={i}
+                onItem={p.onItem}
+                leading={<ContactAvatar name={i.title} />}
+              />
+            ))}
+        </section>
+      ))}
+      <Empty items={items} />
+    </>
   );
 }
 export function PhotosSkin(p: Props) {
@@ -549,8 +568,36 @@ export function MailSkin(p: Props) {
     </div>
   );
 }
+function isWorldClock(item: Item) {
+  return (
+    item.folder === "世界时钟" || Boolean(item.meta.timeZone || item.meta.city)
+  );
+}
+function worldClockTime(item: Item, storyTime: Date) {
+  const shown = meta(item, "clock", item.time.slice(-5));
+  const timeZone = meta(item, "timeZone");
+  if (!timeZone || !Number.isFinite(storyTime.getTime())) return shown;
+  try {
+    return new Intl.DateTimeFormat("zh-CN", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(storyTime);
+  } catch {
+    return shown;
+  }
+}
 export function ClockSkin(p: Props) {
-  const { tab, setTab, items } = useContent(p, "闹钟");
+  const { tab, setTab, items } = useContent(
+    p,
+    p.items.length && p.items.every(isWorldClock) ? "世界时钟" : "闹钟",
+  );
+  const worldClock = tab === "世界时钟";
+  const list = items.filter((item) => isWorldClock(item) === worldClock);
+  const storyTime = new Date(
+    `${p.virtualDate ?? ""}T${p.virtualTime?.padStart(5, "0") ?? ""}:00+08:00`,
+  );
   const [enabled, setEnabled] = useSkinState<string[]>(p, "alarms", []),
     [seconds, setSeconds] = useState(0),
     [running, setRunning] = useState(false);
@@ -585,35 +632,42 @@ export function ClockSkin(p: Props) {
             </div>
           </div>
         ) : (
-          items.map((i) => (
-            <div className="alarm-row" key={i.id}>
-              <button onClick={() => p.onItem(i)}>
-                <time>{meta(i, "clock", i.time.slice(-5))}</time>
-                <small>
-                  {tab === "世界时钟" ? meta(i, "city", i.title) : i.title}
-                </small>
-              </button>
-              {tab === "闹钟" ? (
-                <button
-                  role="switch"
-                  aria-label={`闹钟${i.title}`}
-                  aria-checked={enabled.includes(i.id)}
-                  className={`native-switch ${enabled.includes(i.id) ? "on" : ""}`}
-                  onClick={() =>
-                    setEnabled(
-                      enabled.includes(i.id)
-                        ? enabled.filter((x) => x !== i.id)
-                        : [...enabled, i.id],
-                    )
-                  }
-                >
-                  <span />
+          <>
+            {list.map((i) => (
+              <div className="alarm-row" key={i.id}>
+                <button onClick={() => p.onItem(i)}>
+                  <time>
+                    {worldClock
+                      ? worldClockTime(i, storyTime)
+                      : meta(i, "clock", i.time.slice(-5))}
+                  </time>
+                  <small>
+                    {worldClock ? meta(i, "city", i.title) : i.title}
+                  </small>
                 </button>
-              ) : (
-                <Clock size={35} />
-              )}
-            </div>
-          ))
+                {tab === "闹钟" ? (
+                  <button
+                    role="switch"
+                    aria-label={`闹钟${i.title}`}
+                    aria-checked={enabled.includes(i.id)}
+                    className={`native-switch ${enabled.includes(i.id) ? "on" : ""}`}
+                    onClick={() =>
+                      setEnabled(
+                        enabled.includes(i.id)
+                          ? enabled.filter((x) => x !== i.id)
+                          : [...enabled, i.id],
+                      )
+                    }
+                  >
+                    <span />
+                  </button>
+                ) : (
+                  <Clock size={35} />
+                )}
+              </div>
+            ))}
+            <Empty items={list} label={worldClock ? "暂无城市" : "暂无闹钟"} />
+          </>
         )}
       </div>
       <Tabs
@@ -847,20 +901,31 @@ function LocationMap({
         />
         <rect x="205" y="112" width="42" height="65" rx="7" fill="#bdcfac" />
       </svg>
-      {items.map((i, n) => (
-        <button
-          key={i.id}
-          aria-label={`地图位置${i.title}`}
-          className="map-pin"
-          style={{
-            left: `${Math.max(5, Math.min(90, Number(meta(i, "x", String(20 + ((n * 17) % 65))))))}%`,
-            top: `${Math.max(8, Math.min(80, Number(meta(i, "y", String(25 + ((n * 13) % 50))))))}%`,
-          }}
-          onClick={() => onItem(i)}
-        >
-          {find ? <Avatar name={i.title} /> : <MapPin size={24} />}
-        </button>
-      ))}
+      {items.map((i, n) => {
+        const current = !find && i.folder === "我的位置";
+        return (
+          <button
+            key={i.id}
+            aria-label={current ? `我的位置 ${i.title}` : `地图位置${i.title}`}
+            className="map-pin"
+            data-current={current || undefined}
+            style={{
+              left: `${Math.max(5, Math.min(90, Number(meta(i, "x", String(20 + ((n * 17) % 65))))))}%`,
+              top: `${Math.max(8, Math.min(80, Number(meta(i, "y", String(25 + ((n * 13) % 50))))))}%`,
+            }}
+            onClick={() => onItem(i)}
+          >
+            {find ? (
+              <Avatar name={i.title} />
+            ) : current ? (
+              <LocateFixed size={23} />
+            ) : (
+              <MapPin size={24} />
+            )}
+            {current && <span>我的位置</span>}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -871,7 +936,7 @@ export function MapsSkin(p: Props) {
       <Header p={p} />
       <LocationMap items={items} onItem={p.onItem} />
       <div className="map-sheet">
-        <SearchBox value={q} set={setQ} placeholder="搜索虚构地点" />
+        <SearchBox value={q} set={setQ} placeholder="搜索地点" />
         <div className="map-places">
           {items.map((i) => (
             <Row key={i.id} item={i} onItem={p.onItem} leading={<MapPin />} />
