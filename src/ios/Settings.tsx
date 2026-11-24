@@ -52,6 +52,7 @@ const groups: Row[][] = [
 ];
 export function NativeSettings({
   work,
+  battery,
   connectivity,
   items,
   creator,
@@ -59,6 +60,7 @@ export function NativeSettings({
   onSettings,
 }: {
   work: Work;
+  battery: number;
   connectivity: DeviceConnectivity;
   items: Item[];
   creator: boolean;
@@ -184,7 +186,7 @@ export function NativeSettings({
         return (
           <>
             <div className="settings-group">
-              {row("电池电量", work.phone.battery + "%")}
+              {row("电池电量", battery + "%")}
               {toggle("低电量模式", lowPower, setLowPower)}
             </div>
             <p className="settings-page-caption">

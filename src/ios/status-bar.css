@@ -57,3 +57,18 @@
 .ios18 .signals .ios-battery.low-battery > span {
   background: #ffd60a;
 }
+.ios18 .phone-screen[data-app="settings"] .signals .ios-battery {
+  color: #111;
+  background: #595959;
+}
+.ios18 .phone-screen[data-app="settings"] .signals .ios-battery > b {
+  color: #fff;
+  mix-blend-mode: normal;
+}
+.dark-phone.ios18 .phone-screen[data-app="settings"] .signals .ios-battery {
+  color: #fff;
+  background: #aeaeae;
+}
+.dark-phone.ios18 .phone-screen[data-app="settings"] .signals .ios-battery > b {
+  color: #111;
+}

@@ -314,6 +314,12 @@ function PhoneRuntime({
     if (app && !work.apps.some((a) => a.id === app && a.installed)) setApp("");
   }, [app, work.apps]);
   const displayTime = creator ? work.phone.time : s.time || work.phone.time;
+  const startingBattery = work.phone.battery;
+  const elapsedHours = creator ? 0 : Math.floor((s.elapsedMs ?? 0) / 3_600_000);
+  const battery = Math.max(
+    Math.min(30, startingBattery),
+    startingBattery - elapsedHours,
+  );
   const plugin = getApp(app);
   useEffect(() => {
     const count = s.notifications.length;
@@ -448,10 +454,10 @@ function PhoneRuntime({
                 </span>
               ) : null}
               <span
-                className={`ios-battery${work.phone.battery <= 20 ? " low-battery" : ""}`}
+                className={`ios-battery${battery <= 20 ? " low-battery" : ""}`}
               >
-                <span style={{ width: `${work.phone.battery}%` }} />
-                <b>{work.phone.battery}</b>
+                <span style={{ width: `${battery}%` }} />
+                <b>{battery}</b>
               </span>
             </button>
           </div>
@@ -494,6 +500,7 @@ function PhoneRuntime({
                   ]}
                   creator={creator}
                   state={s}
+                  battery={battery}
                   connectivity={connectivity}
                   onRead={(id) => event("read", id)}
                   onEdit={(item, appId = app) => onEdit?.(appId, item)}
@@ -528,6 +535,7 @@ function PhoneRuntime({
                 storeOpen={app === "appstore"}
                 closeStore={() => setApp("")}
                 work={work}
+                battery={battery}
                 layout={deviceLayout.layout}
                 change={deviceLayout.change}
                 importLayout={deviceLayout.importLayout}
@@ -579,7 +587,7 @@ function PhoneRuntime({
           )}
           {panel === "control" && (
             <ControlCenter
-              battery={work.phone.battery}
+              battery={battery}
               network={work.phone.network}
               carriers={work.phone.carriers}
               connectivity={connectivity}
@@ -905,6 +913,7 @@ function AppContent({
   items,
   creator,
   state,
+  battery,
   connectivity,
   onRead,
   onEdit,
@@ -919,6 +928,7 @@ function AppContent({
   items: Item[];
   creator: boolean;
   state: Runtime;
+  battery: number;
   connectivity: DeviceConnectivity;
   onRead: (id: string) => void;
   onEdit: (item: Item, appId?: string) => void;
@@ -1129,6 +1139,7 @@ function AppContent({
       {app.id === "settings" && !detail ? (
         <NativeSettings
           work={work}
+          battery={battery}
           connectivity={connectivity}
           items={items}
           creator={creator}

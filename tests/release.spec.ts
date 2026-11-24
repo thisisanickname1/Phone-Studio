@@ -200,10 +200,27 @@ test("world clock uses the story's Beijing time and each city's seasonal offset"
   page,
   request,
 }) => {
+  await page.setViewportSize({ width: 393, height: 659 });
   const work = await (await request.get("/work.json")).json();
-  for (const [date, times] of [
-    ["2026-12-25", ["09:41", "02:41", "03:41"]],
-    ["2026-07-01", ["09:41", "03:41", "04:41"]],
+  for (const [date, time, times, offsets] of [
+    [
+      "2026-12-25",
+      "09:41",
+      ["09:41", "02:41", "03:41"],
+      ["今天 +0小时", "今天 -7小时", "今天 -6小时"],
+    ],
+    [
+      "2026-07-01",
+      "09:41",
+      ["09:41", "03:41", "04:41"],
+      ["今天 +0小时", "今天 -6小时", "今天 -5小时"],
+    ],
+    [
+      "2026-12-25",
+      "00:30",
+      ["00:30", "17:30", "18:30"],
+      ["今天 +0小时", "昨天 -7小时", "昨天 -6小时"],
+    ],
   ] as const) {
     await page.route(
       "**/work.json",
@@ -211,8 +228,8 @@ test("world clock uses the story's Beijing time and each city's seasonal offset"
         route.fulfill({
           json: {
             ...work,
-            id: work.id + date,
-            phone: { ...work.phone, date, time: "09:41" },
+            id: work.id + date + time,
+            phone: { ...work.phone, date, time },
           },
         }),
       { times: 1 },
@@ -228,12 +245,15 @@ test("world clock uses the story's Beijing time and each city's seasonal offset"
     await expect(
       clock.getByRole("heading", { name: "世界时钟" }),
     ).toBeVisible();
-    await expect(clock.locator(".alarm-row small")).toHaveText([
+    await expect(clock.locator(".world-clock-city")).toHaveText([
       "S城",
       "巴塞罗那",
       "开罗",
     ]);
-    await expect(clock.locator(".alarm-row time")).toHaveText([...times]);
+    await expect(clock.locator(".world-clock-row time")).toHaveText([...times]);
+    await expect(clock.locator(".world-clock-row small")).toHaveText([
+      ...offsets,
+    ]);
     await clock.getByRole("button", { name: "闹钟", exact: true }).click();
     await expect(clock.getByText("暂无闹钟")).toBeVisible();
     await expect(clock.getByRole("switch")).toHaveCount(0);

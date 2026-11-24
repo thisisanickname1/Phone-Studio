@@ -825,6 +825,42 @@
   background: #0b0b0b;
   border-color: #333;
 }
+.world-clock-list {
+  padding: 0 17px;
+}
+.world-clock-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 83px;
+  padding: 12px 0;
+  border-bottom: 1px solid #292929;
+  text-align: left;
+}
+.world-clock-row > span {
+  display: grid;
+  gap: 4px;
+}
+.world-clock-row small {
+  font-size: 12px;
+  color: #a2a2aa;
+}
+.world-clock-city {
+  font-size: 24px;
+  font-weight: 450;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.world-clock-row time {
+  font-size: 50px;
+  font-weight: 250;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  text-align: right;
+}
 .alarm-row {
   display: flex;
   align-items: center;

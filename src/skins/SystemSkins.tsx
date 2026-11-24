@@ -574,19 +574,43 @@ function isWorldClock(item: Item) {
     item.folder === "世界时钟" || Boolean(item.meta.timeZone || item.meta.city)
   );
 }
-function worldClockTime(item: Item, storyTime: Date) {
-  const shown = meta(item, "clock", item.time.slice(-5));
+function worldClockDisplay(item: Item, storyTime: Date) {
+  const fallback = {
+    time: meta(item, "clock", item.time.slice(-5)),
+    relative: "",
+  };
   const timeZone = meta(item, "timeZone");
-  if (!timeZone || !Number.isFinite(storyTime.getTime())) return shown;
+  if (!timeZone || !Number.isFinite(storyTime.getTime())) return fallback;
   try {
-    return new Intl.DateTimeFormat("zh-CN", {
-      timeZone,
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23",
-    }).format(storyTime);
+    const { year, month, day, hour, minute } = Object.fromEntries(
+      new Intl.DateTimeFormat("zh-CN", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      })
+        .formatToParts(storyTime)
+        .map(({ type, value }) => [type, value]),
+    );
+    const cityWallTime = Date.parse(
+      `${year.padStart(4, "0")}-${month}-${day}T${hour}:${minute}:00Z`,
+    );
+    if (!Number.isFinite(cityWallTime)) return fallback;
+    const storyWallTime = storyTime.getTime() + 8 * 3_600_000;
+    const dayDifference =
+      Math.floor(cityWallTime / 86_400_000) -
+      Math.floor(storyWallTime / 86_400_000);
+    const offsetMinutes = (cityWallTime - storyWallTime) / 60_000;
+    const minutes = Math.abs(offsetMinutes);
+    const offset = `${offsetMinutes < 0 ? "-" : "+"}${Math.floor(minutes / 60)}小时${minutes % 60 ? `${minutes % 60}分` : ""}`;
+    const dateLabel =
+      dayDifference < 0 ? "昨天" : dayDifference > 0 ? "明天" : "今天";
+    return { time: `${hour}:${minute}`, relative: `${dateLabel} ${offset}` };
   } catch {
-    return shown;
+    return fallback;
   }
 }
 export function ClockSkin(p: Props) {
@@ -632,42 +656,54 @@ export function ClockSkin(p: Props) {
               </button>
             </div>
           </div>
+        ) : worldClock ? (
+          <div className="world-clock-list">
+            {list.map((item) => {
+              const { time, relative } = worldClockDisplay(item, storyTime);
+              return (
+                <button
+                  className="world-clock-row"
+                  key={item.id}
+                  onClick={() => p.onItem(item)}
+                >
+                  <span>
+                    {relative && <small>{relative}</small>}
+                    <span className="world-clock-city">
+                      {meta(item, "city", item.title)}
+                    </span>
+                  </span>
+                  <time>{time}</time>
+                </button>
+              );
+            })}
+            <Empty items={list} label="暂无城市" />
+          </div>
         ) : (
           <>
             {list.map((i) => (
               <div className="alarm-row" key={i.id}>
                 <button onClick={() => p.onItem(i)}>
-                  <time>
-                    {worldClock
-                      ? worldClockTime(i, storyTime)
-                      : meta(i, "clock", i.time.slice(-5))}
-                  </time>
-                  <small>
-                    {worldClock ? meta(i, "city", i.title) : i.title}
-                  </small>
+                  <time>{meta(i, "clock", i.time.slice(-5))}</time>
+                  <small>{i.title}</small>
                 </button>
-                {tab === "闹钟" ? (
-                  <button
-                    role="switch"
-                    aria-label={`闹钟${i.title}`}
-                    aria-checked={enabled.includes(i.id)}
-                    className={`native-switch ${enabled.includes(i.id) ? "on" : ""}`}
-                    onClick={() =>
-                      setEnabled(
-                        enabled.includes(i.id)
-                          ? enabled.filter((x) => x !== i.id)
-                          : [...enabled, i.id],
-                      )
-                    }
-                  >
-                    <span />
-                  </button>
-                ) : (
-                  <Clock size={35} />
-                )}
+                <button
+                  role="switch"
+                  aria-label={`闹钟${i.title}`}
+                  aria-checked={enabled.includes(i.id)}
+                  className={`native-switch ${enabled.includes(i.id) ? "on" : ""}`}
+                  onClick={() =>
+                    setEnabled(
+                      enabled.includes(i.id)
+                        ? enabled.filter((x) => x !== i.id)
+                        : [...enabled, i.id],
+                    )
+                  }
+                >
+                  <span />
+                </button>
               </div>
             ))}
-            <Empty items={list} label={worldClock ? "暂无城市" : "暂无闹钟"} />
+            <Empty items={list} label="暂无闹钟" />
           </>
         )}
       </div>

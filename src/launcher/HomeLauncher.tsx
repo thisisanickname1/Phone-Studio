@@ -26,6 +26,7 @@ import {
 } from "./layout";
 type Props = {
   work: Work;
+  battery: number;
   storeOpen?: boolean;
   closeStore?: () => void;
   layout: DeviceLayout;
@@ -57,10 +58,12 @@ function WidgetFace({
   widget,
   work,
   time,
+  battery,
 }: {
   widget: Widget;
   work: Work;
   time: string;
+  battery: number;
 }) {
   const dateText = work.phone.date || "2026-10-25";
   const date = new Date(dateText + "T12:00:00Z");
@@ -110,7 +113,7 @@ function WidgetFace({
       ) : (
         <>
           <Battery size={44} />
-          <b>{work.phone.battery}%</b>
+          <b>{battery}%</b>
           <small>电池</small>
         </>
       )}
@@ -465,7 +468,12 @@ export function HomeLauncher(p: Props) {
       {entry.app ? (
         p.icon({ ...entry.app, ...(dock ? { name: "" } : {}) })
       ) : entry.widget ? (
-        <WidgetFace widget={entry.widget} work={p.work} time={p.time} />
+        <WidgetFace
+          widget={entry.widget}
+          work={p.work}
+          time={p.time}
+          battery={p.battery}
+        />
       ) : (
         <span className="app-icon-wrap">
           <span className="folder-icon">
@@ -775,6 +783,7 @@ export function HomeLauncher(p: Props) {
                     widget={{ id: "preview", type: widgetType, size }}
                     work={p.work}
                     time={p.time}
+                    battery={p.battery}
                   />
                 </div>
                 <div className="widget-types">

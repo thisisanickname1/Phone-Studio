@@ -849,6 +849,14 @@
   background: #1c1c1ef0;
   border-color: #3a3a3c;
 }
+.phone-shell.ios18 .catalog-skin.native-clock .catalog-tabs {
+  background: #050505;
+  border-color: #292929;
+  backdrop-filter: none;
+}
+.ios18 .app-screen.skin-clock {
+  background: #050505;
+}
 .dark-phone.ios18 .catalog-skin[class*="native-"] .catalog-search {
   background: #2c2c2e;
 }
