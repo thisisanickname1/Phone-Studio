@@ -4184,12 +4184,19 @@ label {
 .wa-chat-row p {
   display: flex;
   align-items: center;
+  gap: 4px;
   font-size: 11px;
   color: #929292;
+  margin-top: 7px;
+}
+.wa-chat-row p > svg {
+  flex: none;
+}
+.wa-chat-row p > span {
+  min-width: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  margin-top: 7px;
 }
 .wa-chat-row time {
   font-size: 9px;

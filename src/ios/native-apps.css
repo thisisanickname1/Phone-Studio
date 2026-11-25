@@ -877,10 +877,8 @@
   width: 100%;
   height: 100%;
 }
-.weather-map-river {
+.weather-map-landmark {
   position: absolute;
-  top: 17%;
-  left: 54%;
   color: #afd5e8;
   font-size: 12px;
   letter-spacing: 0.18em;

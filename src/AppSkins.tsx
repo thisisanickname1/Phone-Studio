@@ -715,8 +715,8 @@ export function WhatsAppSkin(p: SkinProps) {
                       <div>
                         <strong>{t}</strong>
                         <p>
-                          {last.outgoing && <CheckCheck size={12} />}{ " " }
-                          {last.body}
+                          {last.outgoing && <CheckCheck size={12} />}
+                          <span>{last.body}</span>
                         </p>
                       </div>
                       <time>{last.time.slice(-5)}</time>

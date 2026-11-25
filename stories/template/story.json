@@ -737,6 +737,8 @@
           "rain": "10%",
           "wind": "西北风 9 km/h",
           "sunrise": "08:15",
+          "mapRegion": "barcelona",
+          "mapPlaces": "[{\"name\":\"圣库加特\",\"longitude\":2.086,\"latitude\":41.471,\"temperature\":7,\"rain\":15,\"aqi\":28},{\"name\":\"巴达洛纳\",\"longitude\":2.248,\"latitude\":41.449,\"temperature\":9,\"rain\":10,\"aqi\":36},{\"name\":\"埃尔普拉特\",\"longitude\":2.095,\"latitude\":41.328,\"temperature\":8,\"rain\":10,\"aqi\":39}]",
           "hourly": "[{\"time\":\"现在\",\"temperature\":\"8\"},{\"time\":\"03时\",\"temperature\":\"8\"},{\"time\":\"04时\",\"temperature\":\"7\"},{\"time\":\"05时\",\"temperature\":\"7\"},{\"time\":\"06时\",\"temperature\":\"6\"}]",
           "daily": "[{\"label\":\"今天\",\"low\":\"6\",\"high\":\"14\"},{\"label\":\"周六\",\"low\":\"7\",\"high\":\"15\"},{\"label\":\"周日\",\"low\":\"8\",\"high\":\"14\"},{\"label\":\"周一\",\"low\":\"7\",\"high\":\"13\"},{\"label\":\"周二\",\"low\":\"6\",\"high\":\"14\"},{\"label\":\"周三\",\"low\":\"7\",\"high\":\"15\"},{\"label\":\"周四\",\"low\":\"7\",\"high\":\"14\"}]"
         }
@@ -758,6 +760,8 @@
           "rain": "0%",
           "wind": "北风 8 km/h",
           "sunrise": "06:50",
+          "mapRegion": "cairo",
+          "mapPlaces": "[{\"name\":\"舒卜拉海迈\",\"longitude\":31.251,\"latitude\":30.125,\"temperature\":13,\"rain\":0,\"aqi\":82},{\"name\":\"吉萨\",\"longitude\":31.209,\"latitude\":30.009,\"temperature\":14,\"rain\":0,\"aqi\":79},{\"name\":\"新开罗\",\"longitude\":31.47,\"latitude\":30.03,\"temperature\":12,\"rain\":5,\"aqi\":64}]",
           "hourly": "[{\"time\":\"现在\",\"temperature\":\"13\"},{\"time\":\"04时\",\"temperature\":\"12\"},{\"time\":\"05时\",\"temperature\":\"12\"},{\"time\":\"06时\",\"temperature\":\"11\"},{\"time\":\"07时\",\"temperature\":\"12\"}]",
           "daily": "[{\"label\":\"今天\",\"low\":\"11\",\"high\":\"22\"},{\"label\":\"周六\",\"low\":\"12\",\"high\":\"23\"},{\"label\":\"周日\",\"low\":\"12\",\"high\":\"22\"},{\"label\":\"周一\",\"low\":\"11\",\"high\":\"21\"},{\"label\":\"周二\",\"low\":\"10\",\"high\":\"20\"},{\"label\":\"周三\",\"low\":\"11\",\"high\":\"21\"},{\"label\":\"周四\",\"low\":\"12\",\"high\":\"22\"}]"
         }
