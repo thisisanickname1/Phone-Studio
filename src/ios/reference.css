@@ -392,8 +392,27 @@
 
 .ios18 .wallpaper-custom.is-locked {
   /* On shorter screens, limit how far centering can pull the faces up. */
-  background: #fbfbfb url("../lockscreen.JPG") center
+  --lock-photo: #fbfbfb url("../lockscreen.JPG") center
     max(50%, calc(4px + var(--extra-safe-top, 0px))) / 100% auto no-repeat;
+  background: var(--lock-photo);
+}
+
+.ios18 .wallpaper-custom.is-locked .pin-open {
+  overflow: hidden;
+  isolation: isolate;
+  background: #17171d;
+  backdrop-filter: none;
+}
+
+.ios18 .wallpaper-custom.is-locked .pin-open::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--lock-photo);
+  filter: blur(27px);
+  transform: scale(1.16);
+  opacity: 0.42;
 }
 
 .ios18 .wallpaper-custom.is-locked .wallpaper-orb {

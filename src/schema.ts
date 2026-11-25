@@ -113,6 +113,17 @@ export const workSchema = z.object({
       ])
       .optional(),
     wifiNetworks: z.array(z.string().trim().min(1).max(32)).max(8).optional(),
+    wifiAccess: z
+      .record(
+        z.string().trim().min(1).max(32),
+        z
+          .object({
+            password: z.string().min(1).max(64),
+            teacherOnly: z.boolean().optional(),
+          })
+          .strict(),
+      )
+      .optional(),
     notifications: z.boolean(),
   }),
   apps: z

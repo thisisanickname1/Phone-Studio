@@ -18,6 +18,8 @@ import {
   Radio,
   Battery,
   Link,
+  Check,
+  LoaderCircle,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { ControlGlyph } from "./ios/ControlGlyph";
@@ -67,11 +69,15 @@ export function DeviceLock({
   onLight: () => void;
 }) {
   const [code, setCode] = useState("");
+  const [emergency, setEmergency] = useState(false);
   useEffect(() => {
     if (error) setCode("");
   }, [error]);
   useEffect(() => {
-    if (!pinOpen) setCode("");
+    if (!pinOpen) {
+      setCode("");
+      setEmergency(false);
+    }
   }, [pinOpen]);
   const digit = (key: string) => {
     const value = key === "⌫" ? code.slice(0, -1) : (code + key).slice(0, 12);
@@ -169,10 +175,37 @@ export function DeviceLock({
                 n ? (
                   <button
                     key={i}
+                    className="pin-digit"
+                    data-zero={n === "0" || undefined}
                     aria-label={"密码键" + n}
                     onClick={() => digit(n)}
                   >
                     <b>{n}</b>
+                    {Number(n) >= 2 && (
+                      <small aria-hidden="true">
+                        {
+                          [
+                            "ABC",
+                            "DEF",
+                            "GHI",
+                            "JKL",
+                            "MNO",
+                            "PQRS",
+                            "TUV",
+                            "WXYZ",
+                          ][Number(n) - 2]
+                        }
+                      </small>
+                    )}
+                  </button>
+                ) : i === 11 && code ? (
+                  <button
+                    key={i}
+                    className="pin-erase"
+                    aria-label="删除一位密码"
+                    onClick={() => digit("⌫")}
+                  >
+                    <Delete size={22} />
                   </button>
                 ) : (
                   <span key={i} />
@@ -186,14 +219,25 @@ export function DeviceLock({
             <button onClick={() => onUnlock(code)}>解锁</button>
           )}
           <div className="pin-footer">
+            <button onClick={() => setEmergency(true)}>紧急情况</button>
             <button onClick={() => setPinOpen(false)}>取消</button>
-            <button
-              aria-label="删除一位密码"
-              onClick={() => (code ? digit("⌫") : setPinOpen(false))}
-            >
-              {code ? "删除" : "取消"}
-            </button>
           </div>
+          {emergency && (
+            <section
+              className="pin-emergency"
+              role="dialog"
+              aria-modal="true"
+              aria-label="紧急情况"
+            >
+              <div>
+                <h2>紧急情况</h2>
+                <p>虚拟手机内的紧急界面</p>
+                <button onClick={() => setEmergency(false)}>
+                  返回密码键盘
+                </button>
+              </div>
+            </section>
+          )}
         </div>
       )}
     </motion.div>
@@ -374,9 +418,26 @@ export function ControlCenter({
                         <button
                           key={name}
                           aria-pressed={connectivity.wifiNetwork === name}
-                          onClick={() => connectivity.setWifiNetwork(name)}
+                          aria-label={name}
+                          disabled={Boolean(connectivity.joiningWifi)}
+                          onClick={() => connectivity.selectWifi(name)}
                         >
                           <ControlGlyph name="wifi" size={16} /> {name}
+                          {connectivity.joiningWifi === name ? (
+                            <small role="status">
+                              <LoaderCircle
+                                className="wifi-loading"
+                                size={14}
+                              />{" "}
+                              正在加入…
+                            </small>
+                          ) : connectivity.wifiNetwork === name ? (
+                            <Check size={15} aria-hidden="true" />
+                          ) : (
+                            connectivity.accessFor(name) && (
+                              <LockKeyhole size={14} aria-hidden="true" />
+                            )
+                          )}
                         </button>
                       ))}
                     </div>

@@ -295,7 +295,7 @@ test("the school phone starts on 4G with two SIMs and nearby Wi-Fi", async ({
   const wifi = center.locator(".cc-tool");
   await expect(wifi.getByText("未连接")).toBeVisible();
   await expect(wifi.locator(".cc-wifi-list button")).toHaveText([
-    "S城一高_访客",
+    "S城一高",
     "S城一高_图书馆",
     "闹麻麻小卖部",
   ]);
@@ -332,8 +332,19 @@ test("the school phone starts on 4G with two SIMs and nearby Wi-Fi", async ({
       .toBeLessThan(20);
   }
   await settings
-    .getByRole("button", { name: "S城一高_访客", exact: true })
+    .getByRole("button", { name: "S城一高_图书馆", exact: true })
     .click();
+  const prompt = page.getByRole("dialog", {
+    name: "S城一高_图书馆 · Wi-Fi 密码",
+  });
+  await prompt.getByLabel("Wi-Fi 密码").fill("incorrect");
+  await prompt.getByRole("button", { name: "加入", exact: true }).click();
+  await expect(prompt.getByRole("alert")).toHaveText("密码不正确");
+  await expect(prompt.getByLabel("Wi-Fi 密码")).toHaveValue("");
+  await expect(status.locator(".status-network-type")).toHaveText("4G");
+  await prompt.getByLabel("Wi-Fi 密码").fill("PretendingToStudy");
+  await prompt.getByRole("button", { name: "加入", exact: true }).click();
+  await expect(settings.getByText("正在加入…", { exact: true })).toBeVisible();
   await expect(status.locator(".status-wifi")).toBeVisible();
   const connectedHeading = settings.getByText("我的网络", { exact: true });
   await expect(connectedHeading).toBeVisible();
@@ -345,4 +356,139 @@ test("the school phone starts on 4G with two SIMs and nearby Wi-Fi", async ({
   expect(cardBounds.y - labelBounds.y - labelBounds.height).toBeGreaterThan(4);
   await settings.getByRole("switch", { name: "Wi-Fi" }).uncheck();
   await expect(status.locator(".status-network-type")).toHaveText("4G");
+});
+
+test("the locked school Wi-Fi remembers its password and resets teacher attempts at local midnight", async ({
+  page,
+}) => {
+  test.setTimeout(45_000);
+  await page.setViewportSize({ width: 393, height: 659 });
+  await page.clock.setFixedTime(new Date("2026-12-25T15:59:00Z"));
+  const settings = page.locator(".native-settings");
+  const school = settings.getByRole("button", { name: "S城一高", exact: true });
+  const portal = page.getByRole("dialog", { name: "请认证教师身份" });
+  const status = page.locator(".status-bar");
+
+  async function showNetworks(checkKeypad = false) {
+    await page.getByRole("button", { name: "轻触解锁" }).click();
+    if (checkKeypad) {
+      await expect(page.locator(".passcode-dots > i")).toHaveCount(4);
+      const keys = page.locator(".pin-digit");
+      await expect(keys.locator("small")).toHaveText([
+        "ABC",
+        "DEF",
+        "GHI",
+        "JKL",
+        "MNO",
+        "PQRS",
+        "TUV",
+        "WXYZ",
+      ]);
+      const baseline = await keys.evaluateAll((buttons) =>
+        buttons
+          .slice(0, 3)
+          .map(
+            (button) => button.querySelector("b")!.getBoundingClientRect().top,
+          ),
+      );
+      expect(Math.max(...baseline) - Math.min(...baseline)).toBeLessThan(1);
+      await page.getByRole("button", { name: "紧急情况", exact: true }).click();
+      await expect(
+        page.getByRole("dialog", { name: "紧急情况" }),
+      ).toBeVisible();
+      await page.getByRole("button", { name: "返回密码键盘" }).click();
+      await expect(
+        page.getByRole("button", { name: "取消", exact: true }),
+      ).toBeVisible();
+    }
+    for (const digit of "0101")
+      await page
+        .getByRole("button", { name: "密码键" + digit, exact: true })
+        .click();
+    await page.getByRole("button", { name: "打开设置", exact: true }).click();
+    await settings.getByRole("button", { name: /无线局域网/ }).click();
+  }
+
+  async function fail(remaining: number) {
+    await portal.getByLabel("工号", { exact: true }).fill("sample-employee");
+    await portal.getByLabel("密码", { exact: true }).fill("sample-credential");
+    await portal.getByRole("button", { name: "登录", exact: true }).click();
+    const error = page.getByRole("alertdialog", {
+      name: "工号不存在或密码错误",
+    });
+    await expect(error).toBeVisible();
+    await error.getByRole("button", { name: "知道了" }).click();
+    await expect(
+      portal.getByText("最多输入3次，还剩" + remaining + "次机会"),
+    ).toBeVisible();
+    await expect(status.locator(".status-network-type")).toHaveText("4G");
+  }
+
+  await page.goto("/");
+  await showNetworks(true);
+  await expect(school).toHaveText("S城一高");
+  await settings.getByRole("button", { name: "S城一高的网络详情" }).click();
+  const info = page.getByRole("dialog", { name: "S城一高 · 网络详情" });
+  await expect(info.getByText("需要密码", { exact: true })).toBeVisible();
+  await info.getByRole("button", { name: "完成", exact: true }).click();
+  await school.click();
+  const password = page.getByRole("dialog", { name: "S城一高 · Wi-Fi 密码" });
+  await password.getByLabel("Wi-Fi 密码").fill("incorrect");
+  await password.getByRole("button", { name: "加入", exact: true }).click();
+  await expect(password.getByRole("alert")).toHaveText("密码不正确");
+  await password.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(school).toHaveText("S城一高");
+  await school.click();
+  await password.getByLabel("Wi-Fi 密码").fill("OnlyForTeachersHaha");
+  await password.getByRole("button", { name: "加入", exact: true }).click();
+  await expect(portal.getByText("最多输入3次，还剩3次机会")).toBeVisible();
+  await fail(2);
+  await portal.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(school).toContainText("未加入");
+  await school.click();
+  await expect(portal.getByText("最多输入3次，还剩2次机会")).toBeVisible();
+  await fail(1);
+  await page.reload();
+  await showNetworks();
+  await school.click();
+  await expect(portal.getByText("最多输入3次，还剩1次机会")).toBeVisible();
+  await expect(school).toContainText("未加入");
+  await fail(0);
+  await portal.getByLabel("密码", { exact: true }).fill("another-attempt");
+  await expect(
+    portal.getByRole("button", { name: "登录", exact: true }),
+  ).toBeDisabled();
+  const save = await page.evaluate(() => {
+    const key = Object.keys(localStorage).find((key) =>
+      key.startsWith("foundphone-wifi-v1:"),
+    );
+    return key && localStorage.getItem(key);
+  });
+  expect(save).not.toContain("sample-employee");
+  expect(save).not.toContain("sample-credential");
+
+  await page.clock.setFixedTime(new Date("2026-12-25T16:00:00Z"));
+  await portal.getByRole("button", { name: "取消", exact: true }).click();
+  await school.click();
+  await expect(portal.getByText("最多输入3次，还剩3次机会")).toBeVisible();
+  await portal.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(school).toContainText("未加入");
+  await expect(status.locator(".status-wifi")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "控制中心", exact: true }).click();
+  const center = page.locator(".device-control");
+  await center.getByRole("button", { name: "网络连接" }).click();
+  const shop = center.getByRole("button", {
+    name: "闹麻麻小卖部",
+    exact: true,
+  });
+  await shop.click();
+  const shopPassword = page.getByRole("dialog", {
+    name: "闹麻麻小卖部 · Wi-Fi 密码",
+  });
+  await shopPassword.getByLabel("Wi-Fi 密码").fill("NoFreeWiFiHere");
+  await shopPassword.getByRole("button", { name: "加入", exact: true }).click();
+  await expect(shop.getByText("正在加入…")).toBeVisible();
+  await expect(shop).toHaveAttribute("aria-pressed", "true");
+  await expect(status.locator(".status-wifi")).toHaveCount(1);
 });

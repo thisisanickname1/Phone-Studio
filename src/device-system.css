@@ -321,6 +321,7 @@
   padding: 0;
 }
 .ios18 .device-passcode .pin-keypad button {
+  position: relative;
   width: 78px;
   height: 78px;
   padding: 0;
@@ -341,7 +342,34 @@
 .ios18 .pin-keypad b {
   font-size: 36px;
   line-height: 1;
-  font-weight: 400;
+  font-weight: 650;
+}
+.ios18 .pin-digit:not([data-zero]) > b {
+  transform: translateY(-5px);
+}
+.ios18 .pin-digit > small {
+  position: absolute;
+  top: calc(50% + 12px);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+.ios18 .device-passcode .pin-keypad .pin-erase {
+  background: transparent;
+  backdrop-filter: none;
+}
+.ios18 .pin-emergency {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: #211e26d9;
+}
+.ios18 .pin-emergency button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff3;
 }
 .ios18 .pin-footer {
   position: absolute;

@@ -18,10 +18,15 @@
       "Vodafone Egypt"
     ],
     "wifiNetworks": [
-      "S城一高_访客",
+      "S城一高",
       "S城一高_图书馆",
       "闹麻麻小卖部"
-    ]
+    ],
+    "wifiAccess": {
+      "S城一高": { "password": "OnlyForTeachersHaha", "teacherOnly": true },
+      "S城一高_图书馆": { "password": "PretendingToStudy" },
+      "闹麻麻小卖部": { "password": "NoFreeWiFiHere" }
+    }
   },
   "installedApps": [
     "appstore",

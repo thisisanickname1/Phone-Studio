@@ -16,6 +16,9 @@ import {
   Check,
   Link,
   Globe,
+  Info,
+  LoaderCircle,
+  LockKeyhole,
   Mic,
 } from "lucide-react";
 import type { DeviceConnectivity } from "../deviceConnectivity";
@@ -78,7 +81,11 @@ export function NativeSettings({
     setWifiEnabled,
     wifiNetwork,
     wifiNetworks,
-    setWifiNetwork,
+    selectWifi,
+    accessFor,
+    hasVerifiedWifiPassword,
+    joiningWifi,
+    showWifiInfo,
     cellularEnabled,
     setCellularEnabled,
   } = connectivity;
@@ -147,15 +154,63 @@ export function NativeSettings({
                     <div className="settings-group settings-wifi-networks">
                       {wifiNetworks
                         .filter((name) => name !== wifiNetwork)
-                        .map((name) =>
-                          row(name, "", () => setWifiNetwork(name)),
-                        )}
+                        .map((name) => {
+                          const access = accessFor(name);
+                          if (!access)
+                            return row(name, "", () => selectWifi(name));
+                          const joining = joiningWifi === name;
+                          return (
+                            <div
+                              className="settings-native-row wifi-protected-row"
+                              key={name}
+                            >
+                              <button
+                                className="wifi-row-main"
+                                aria-label={name}
+                                disabled={Boolean(joiningWifi)}
+                                onClick={() => selectWifi(name)}
+                              >
+                                <span>
+                                  {name}
+                                  {joining ? (
+                                    <small role="status">正在加入…</small>
+                                  ) : (
+                                    access.teacherOnly &&
+                                    hasVerifiedWifiPassword(name) && (
+                                      <small>未加入</small>
+                                    )
+                                  )}
+                                </span>
+                                <span
+                                  className="wifi-row-icons"
+                                  aria-hidden="true"
+                                >
+                                  {joining ? (
+                                    <LoaderCircle
+                                      className="wifi-loading"
+                                      size={17}
+                                    />
+                                  ) : (
+                                    <>
+                                      <LockKeyhole size={15} />
+                                      <Wifi size={18} />
+                                    </>
+                                  )}
+                                </span>
+                              </button>
+                              <button
+                                className="wifi-row-info"
+                                aria-label={name + "的网络详情"}
+                                onClick={() => showWifiInfo(name)}
+                              >
+                                <Info size={19} />
+                              </button>
+                            </div>
+                          );
+                        })}
                     </div>
                   </>
                 )}
-                <p className="settings-page-caption">
-                  连接状态仅用于作品中的虚拟手机。
-                </p>
               </>
             )}
           </>

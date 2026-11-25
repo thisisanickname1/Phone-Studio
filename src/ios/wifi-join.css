@@ -1,0 +1,201 @@
+.phone-screen .wifi-join-layer {
+  --wifi-text: #222225;
+  --wifi-blue: #076ac1;
+  --wifi-field: #eeedf0;
+  position: absolute;
+  inset: 0;
+  z-index: 88;
+  color: var(--wifi-text);
+  touch-action: pan-y;
+}
+.wifi-alert-shade {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  padding: 16px 0;
+  background: #1d1c2759;
+  overflow-y: auto;
+}
+.wifi-alert {
+  width: min(82%, 332px);
+  border-radius: 21px;
+  background: #fcfbfd;
+  text-align: center;
+  overflow: hidden;
+}
+.wifi-alert-content {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  padding: 21px 19px 17px;
+}
+.wifi-alert-content h2,
+.wifi-portal h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.wifi-alert-content p {
+  margin: 0;
+  font-size: 13px;
+}
+.wifi-alert-content input,
+.wifi-portal input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--wifi-field);
+  font-size: 16px;
+}
+.wifi-alert-content input:focus,
+.wifi-portal input:focus {
+  outline: 2px solid var(--wifi-blue);
+  outline-offset: 1px;
+}
+.wifi-alert-actions {
+  display: flex;
+  border-top: 1px solid #dfdce2;
+}
+.wifi-alert-actions button {
+  flex: 1;
+  min-height: 45px;
+  color: var(--wifi-blue);
+  font-size: 16px;
+  font-weight: 650;
+}
+.wifi-alert-actions button + button {
+  border-left: 1px solid #dfdce2;
+}
+.wifi-error {
+  color: #ad283b;
+}
+.wifi-portal-frame {
+  position: absolute;
+  inset: 0;
+}
+.wifi-portal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #fdfcfd;
+}
+.wifi-portal > header {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 51px;
+  padding-top: var(--screen-safe-top, 0px);
+  padding-inline: 66px;
+  flex: none;
+  border-bottom: 1px solid #efedf0;
+  font-size: 16px;
+}
+.wifi-portal > header button {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  min-height: 50px;
+  color: var(--wifi-blue);
+  font-size: 15px;
+}
+.wifi-portal-body {
+  width: min(84%, 368px);
+  margin: 0 auto;
+  padding: clamp(27px, 7vh, 64px) 0 22px;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 10px;
+  flex: 1 0 auto;
+  text-align: center;
+}
+.wifi-portal h2 {
+  padding-top: 6px;
+  font-size: 24px;
+}
+.wifi-portal-body p {
+  margin: 0;
+  color: #696870;
+  font-size: 14px;
+}
+.wifi-portal form {
+  display: grid;
+  width: 100%;
+  gap: 11px;
+  margin-top: 16px;
+}
+.wifi-portal form input,
+.wifi-portal form button {
+  height: 46px;
+}
+.wifi-portal form button {
+  color: #fff;
+  background: #222126;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 650;
+}
+.wifi-portal form button:disabled {
+  opacity: 1;
+  color: #d0cbd2;
+}
+.wifi-portal form small {
+  font-size: 12px;
+}
+.wifi-portal > footer {
+  padding: 10px 10px calc(var(--ios-safe-bottom) + 8px);
+  flex: none;
+  text-align: center;
+  color: #828087;
+  font-size: 12px;
+}
+.ios18 .settings-native-row.wifi-protected-row {
+  gap: 7px;
+}
+.wifi-row-main {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  justify-content: space-between;
+  text-align: left;
+}
+.wifi-row-main > span:first-child {
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+}
+.wifi-row-main small,
+.cc-wifi-list small {
+  font-size: 11px;
+}
+.wifi-row-main small {
+  color: #696873;
+}
+.wifi-row-icons {
+  display: inline-flex;
+  flex: none;
+  gap: 7px;
+  align-items: center;
+}
+.wifi-row-info {
+  padding: 4px;
+  color: #076ac1;
+  flex: none;
+}
+.wifi-loading {
+  animation: wifi-spin 0.85s linear infinite;
+}
+@keyframes wifi-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}

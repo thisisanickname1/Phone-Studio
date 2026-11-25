@@ -4,6 +4,7 @@ import {
   type DeviceConnectivity,
 } from "./deviceConnectivity";
 import { StatusGlyph } from "./ios/StatusGlyph";
+import { WifiJoin } from "./ios/WifiJoin";
 import { SocialDetail, socialDetailApps } from "./skins/SocialDetails";
 import { NativeCalculator } from "./ios/Calculator";
 import { HomeLauncher } from "./launcher/HomeLauncher";
@@ -140,7 +141,7 @@ function PhoneRuntime({
   onRuntime?: (s: Runtime) => void;
 }) {
   const [app, setApp] = useState("");
-  const connectivity = useDeviceConnectivity(work.phone);
+  const connectivity = useDeviceConnectivity(work.phone, work.id);
   const [homeRequest, setHomeRequest] = useState(0);
   const [locked, setLocked] = useState(!creator);
   const [pinOpen, setPinOpen] = useState(false);
@@ -843,6 +844,7 @@ function PhoneRuntime({
               setPanel("");
             }}
           />
+          <WifiJoin connectivity={connectivity} />
           <div className="screen-dimmer" />
           <div className="hardware-reflection" />
         </div>

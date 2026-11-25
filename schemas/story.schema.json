@@ -90,6 +90,31 @@
             "maxLength": 32
           }
         },
+        "wifiAccess": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "password": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "teacherOnly": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "password"
+            ],
+            "additionalProperties": false
+          }
+        },
         "notifications": {
           "type": "boolean"
         }
