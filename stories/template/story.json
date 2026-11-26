@@ -3,10 +3,10 @@
   "id": "ui-test-phone-v2",
   "title": "捡手机",
   "description": "仅用于界面测试，不含剧情",
-  "revision": 7,
+  "revision": 8,
   "phone": {
     "owner": "Hamza Abdelkarim",
-    "date": "2026-12-25",
+    "date": "2026-10-22",
     "time": "09:41",
     "battery": 94,
     "network": "4G",
@@ -510,6 +510,125 @@
           "senderId": "class-teacher-rodrigo",
           "body": "Gerard同学上课睡觉，Koundé同学不穿校服，Gordon同学上课看课外书。",
           "time": "2026-09-26 21:10"
+        }
+      ]
+    },
+    {
+      "id": "chat-whatsapp-lamine-yamal",
+      "app": "whatsapp",
+      "title": "Lamine Yamal",
+      "participants": [
+        "owner",
+        "lamine-yamal"
+      ],
+      "messages": [
+        {
+          "id": "lamine-yamal-001",
+          "senderId": "lamine-yamal",
+          "body": "备注拉面鸭床二",
+          "time": "2026-09-23 10:34"
+        },
+        {
+          "id": "lamine-yamal-002",
+          "senderId": "owner",
+          "body": "？",
+          "time": "2026-09-23 12:41"
+        },
+        {
+          "id": "lamine-yamal-003",
+          "senderId": "owner",
+          "body": "你带手机了？",
+          "time": "2026-09-23 12:42"
+        },
+        {
+          "id": "lamine-yamal-004",
+          "senderId": "lamine-yamal",
+          "body": "我天天带啊。",
+          "time": "2026-09-23 12:43"
+        },
+        {
+          "id": "lamine-yamal-005",
+          "senderId": "lamine-yamal",
+          "body": "在在在。",
+          "time": "2026-09-24 12:52"
+        },
+        {
+          "id": "lamine-yamal-006",
+          "senderId": "owner",
+          "body": "怎么了？",
+          "time": "2026-09-24 12:53"
+        },
+        {
+          "id": "lamine-yamal-007",
+          "senderId": "lamine-yamal",
+          "body": "把历史作业借我抄抄。",
+          "time": "2026-09-24 12:54"
+        },
+        {
+          "id": "lamine-yamal-008",
+          "senderId": "owner",
+          "body": "哦哦好的。",
+          "time": "2026-09-24 12:55"
+        },
+        {
+          "id": "lamine-yamal-009",
+          "senderId": "owner",
+          "body": "居然找我借，",
+          "time": "2026-09-24 12:56"
+        },
+        {
+          "id": "lamine-yamal-010",
+          "senderId": "lamine-yamal",
+          "body": "因为你长得像历史很好的那种人。",
+          "time": "2026-09-24 12:57"
+        },
+        {
+          "id": "lamine-yamal-011",
+          "senderId": "owner",
+          "body": "哦哦 谢谢",
+          "time": "2026-09-24 12:58"
+        },
+        {
+          "id": "lamine-yamal-012",
+          "senderId": "lamine-yamal",
+          "body": "你今天什么也没看见。",
+          "time": "2026-10-03 16:23"
+        },
+        {
+          "id": "lamine-yamal-013",
+          "senderId": "lamine-yamal",
+          "body": "对吧？",
+          "time": "2026-10-03 16:24"
+        },
+        {
+          "id": "lamine-yamal-014",
+          "senderId": "owner",
+          "body": "什么？",
+          "time": "2026-10-03 16:25"
+        },
+        {
+          "id": "lamine-yamal-015",
+          "senderId": "owner",
+          "body": "可是指你和德西雷那个牵手的事吗？",
+          "time": "2026-10-03 16:26"
+        },
+        {
+          "id": "lamine-yamal-016",
+          "senderId": "lamine-yamal",
+          "body": "对。而且我们真没牵手。",
+          "time": "2026-10-03 16:27"
+        },
+        {
+          "id": "lamine-yamal-017",
+          "senderId": "owner",
+          "body": "好的，我会帮你的",
+          "time": "2026-10-03 16:28"
+        },
+        {
+          "id": "lamine-yamal-018",
+          "senderId": "lamine-yamal",
+          "body": "好bro😭",
+          "time": "2026-10-03 16:29"
         }
       ]
     }

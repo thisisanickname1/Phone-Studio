@@ -97,6 +97,11 @@ function ItemMedia({ item }: { item: Item }) {
   );
 }
 
+function whatsappDateLabel(date: string) {
+  const parts = /^\d{4}-(\d{2})-(\d{2})$/.exec(date);
+  return parts ? `${Number(parts[1])}月${Number(parts[2])}日` : date;
+}
+
 function MessageList({
   items,
   creator,
@@ -122,7 +127,9 @@ function MessageList({
         return (
           <Fragment key={i.id}>
             {date !== previousDate && (
-              <div className="skin-date">{date}</div>
+              <div className="skin-date">
+                {whatsapp ? whatsappDateLabel(date) : date}
+              </div>
             )}
 
             <div
